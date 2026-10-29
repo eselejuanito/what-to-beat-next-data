@@ -1,0 +1,642 @@
+{
+  "about": "Fan ports, decompilation ports and recompilations, curated by hand. Each one runs a game the player already owns: it needs the game's own files. 'repo' (GitHub) gives the systems from the latest release's files; 'hosts' is written by hand for projects that publish elsewhere. Links go to each project's own page, never to game files.",
+  "ports": [
+    {
+      "games": [
+        {
+          "title": "The Elder Scrolls III: Morrowind",
+          "aliases": [
+            "Morrowind",
+            "The Elder Scrolls III: Morrowind Game of the Year Edition"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenMW",
+      "url": "https://openmw.org/",
+      "repo": "OpenMW/openmw"
+    },
+    {
+      "games": [
+        {
+          "title": "Diablo",
+          "aliases": [
+            "Diablo + Hellfire",
+            "Diablo: Hellfire"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "DevilutionX",
+      "url": "https://github.com/diasurgical/devilutionX",
+      "repo": "diasurgical/devilutionX"
+    },
+    {
+      "games": [
+        {
+          "title": "Heroes of Might and Magic III: The Restoration of Erathia",
+          "aliases": [
+            "Heroes of Might and Magic III",
+            "Heroes of Might and Magic 3: Complete",
+            "Heroes of Might and Magic III: Complete"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "VCMI",
+      "url": "https://vcmi.eu/",
+      "repo": "vcmi/vcmi"
+    },
+    {
+      "games": [
+        {
+          "title": "Fallout 2",
+          "aliases": [
+            "Fallout 2: A Post Nuclear Role Playing Game"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Fallout 2 Community Edition",
+      "url": "https://github.com/alexbatalov/fallout2-ce",
+      "repo": "alexbatalov/fallout2-ce"
+    },
+    {
+      "games": [
+        {
+          "title": "Fallout",
+          "aliases": [
+            "Fallout: A Post Nuclear Role Playing Game"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Fallout Community Edition",
+      "url": "https://github.com/alexbatalov/fallout1-ce",
+      "repo": "alexbatalov/fallout1-ce"
+    },
+    {
+      "games": [
+        {
+          "title": "Arx Fatalis"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Arx Libertatis",
+      "url": "https://arx-libertatis.org/",
+      "repo": "arx/ArxLibertatis"
+    },
+    {
+      "games": [
+        {
+          "title": "Doom",
+          "aliases": [
+            "The Ultimate Doom",
+            "DOOM (1993)",
+            "Doom + Doom II"
+          ]
+        },
+        {
+          "title": "Doom II: Hell on Earth",
+          "aliases": [
+            "Doom II",
+            "DOOM II"
+          ]
+        },
+        {
+          "title": "Final Doom"
+        },
+        {
+          "title": "Heretic: Shadow of the Serpent Riders",
+          "aliases": [
+            "Heretic"
+          ]
+        },
+        {
+          "title": "Hexen: Beyond Heretic",
+          "aliases": [
+            "Hexen"
+          ]
+        },
+        {
+          "title": "Strife: Veteran Edition",
+          "aliases": [
+            "Strife"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "UZDoom",
+      "url": "https://github.com/UZDoom/UZDoom",
+      "repo": "UZDoom/UZDoom"
+    },
+    {
+      "games": [
+        {
+          "title": "Quake"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "vkQuake",
+      "url": "https://github.com/Novum/vkQuake",
+      "repo": "Novum/vkQuake"
+    },
+    {
+      "games": [
+        {
+          "title": "Quake II"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Yamagi Quake II",
+      "url": "https://www.yamagi.org/quake2/",
+      "hosts": [
+        "windows-x64",
+        "macos-arm64",
+        "macos-x64",
+        "linux-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "Jagged Alliance 2",
+          "aliases": [
+            "Jagged Alliance 2 Gold"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "JA2 Stracciatella",
+      "url": "https://ja2-stracciatella.github.io/",
+      "repo": "ja2-stracciatella/ja2-stracciatella"
+    },
+    {
+      "games": [
+        {
+          "title": "Theme Hospital"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "CorsixTH",
+      "url": "https://corsixth.com/",
+      "repo": "CorsixTH/CorsixTH"
+    },
+    {
+      "games": [
+        {
+          "title": "Transport Tycoon Deluxe",
+          "aliases": [
+            "Transport Tycoon"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenTTD",
+      "url": "https://www.openttd.org/",
+      "hosts": [
+        "windows-x64",
+        "macos-arm64",
+        "macos-x64",
+        "linux-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "RollerCoaster Tycoon 2",
+          "aliases": [
+            "RollerCoaster Tycoon 2: Triple Thrill Pack",
+            "RollerCoaster Tycoon 2 Triple Thrill Pack"
+          ]
+        },
+        {
+          "title": "RollerCoaster Tycoon",
+          "aliases": [
+            "RollerCoaster Tycoon Deluxe"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenRCT2",
+      "url": "https://openrct2.io/",
+      "repo": "OpenRCT2/OpenRCT2"
+    },
+    {
+      "games": [
+        {
+          "title": "Command & Conquer",
+          "aliases": [
+            "Command & Conquer: Tiberian Dawn"
+          ]
+        },
+        {
+          "title": "Command & Conquer: Red Alert",
+          "aliases": [
+            "Red Alert"
+          ]
+        },
+        {
+          "title": "Dune 2000"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenRA",
+      "url": "https://www.openra.net/",
+      "repo": "OpenRA/OpenRA"
+    },
+    {
+      "games": [
+        {
+          "title": "Star Wars Jedi Knight: Jedi Academy",
+          "aliases": [
+            "STAR WARS Jedi Knight: Jedi Academy"
+          ]
+        },
+        {
+          "title": "Star Wars Jedi Knight II: Jedi Outcast",
+          "aliases": [
+            "STAR WARS Jedi Knight II: Jedi Outcast"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenJK",
+      "url": "https://github.com/JACoders/OpenJK",
+      "repo": "JACoders/OpenJK"
+    },
+    {
+      "games": [
+        {
+          "title": "Caesar III",
+          "aliases": [
+            "Caesar 3"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Julius",
+      "url": "https://github.com/bvschaik/julius",
+      "repo": "bvschaik/julius"
+    },
+    {
+      "games": [
+        {
+          "title": "The Settlers II",
+          "aliases": [
+            "The Settlers II: Gold Edition",
+            "The Settlers 2: Gold Edition",
+            "The Settlers II (10th Anniversary)"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Return to the Roots",
+      "url": "https://www.siedler25.org/",
+      "repo": "Return-To-The-Roots/s25client",
+      "hosts": [
+        "windows-x64",
+        "macos-x64",
+        "linux-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "Ultima VII: The Black Gate",
+          "aliases": [
+            "Ultima 7: The Black Gate",
+            "Ultima VII: The Complete Edition",
+            "Ultima 7 Complete"
+          ]
+        },
+        {
+          "title": "Ultima VII Part Two: Serpent Isle",
+          "aliases": [
+            "Ultima VII: Serpent Isle"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Exult",
+      "url": "https://exult.info/",
+      "hosts": [
+        "windows-x64",
+        "macos-arm64",
+        "macos-x64",
+        "linux-x64",
+        "android-arm64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "Descent"
+        },
+        {
+          "title": "Descent II",
+          "aliases": [
+            "Descent 2"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "DXX-Rebirth",
+      "url": "https://www.dxx-rebirth.com/",
+      "hosts": [
+        "windows-x64",
+        "macos-arm64",
+        "macos-x64",
+        "linux-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "Star Wars: Dark Forces",
+          "aliases": [
+            "STAR WARS: Dark Forces",
+            "Dark Forces"
+          ]
+        },
+        {
+          "title": "Star Wars Jedi Knight: Dark Forces II",
+          "aliases": [
+            "STAR WARS Jedi Knight: Dark Forces II"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "The Force Engine",
+      "url": "https://theforceengine.github.io/",
+      "repo": "luciusDXL/TheForceEngine",
+      "hosts": [
+        "windows-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "Blood",
+          "aliases": [
+            "One Unit Whole Blood",
+            "Blood: One Unit Whole Blood"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "NBlood",
+      "url": "https://github.com/nukeykt/NBlood",
+      "repo": "nukeykt/NBlood"
+    },
+    {
+      "games": [
+        {
+          "title": "Duke Nukem 3D",
+          "aliases": [
+            "Duke Nukem 3D: Atomic Edition"
+          ]
+        },
+        {
+          "title": "Shadow Warrior (1997)",
+          "aliases": [
+            "Shadow Warrior Classic Redux",
+            "Shadow Warrior Classic"
+          ]
+        },
+        {
+          "title": "PowerSlave",
+          "aliases": [
+            "Exhumed"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Raze",
+      "url": "https://github.com/ZDoom/Raze",
+      "repo": "ZDoom/Raze"
+    },
+    {
+      "games": [
+        {
+          "title": "Tomb Raider (1996)",
+          "aliases": [
+            "Tomb Raider 1+2+3",
+            "Tomb Raider I"
+          ]
+        },
+        {
+          "title": "Tomb Raider II",
+          "aliases": [
+            "Tomb Raider 2"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "TRX",
+      "url": "https://github.com/LostArtefacts/TRX",
+      "repo": "LostArtefacts/TRX"
+    },
+    {
+      "games": [
+        {
+          "title": "Dungeon Keeper",
+          "aliases": [
+            "Dungeon Keeper Gold"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "KeeperFX",
+      "url": "https://keeperfx.net/",
+      "repo": "dkfans/keeperfx",
+      "hosts": [
+        "windows-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "FreeSpace 2",
+          "aliases": [
+            "Freespace 2"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "FreeSpace Open",
+      "url": "https://www.hard-light.net/",
+      "repo": "scp-fs2open/fs2open.github.com"
+    },
+    {
+      "games": [
+        {
+          "title": "X-COM: UFO Defense",
+          "aliases": [
+            "UFO: Enemy Unknown",
+            "X-COM: UFO Defense"
+          ]
+        },
+        {
+          "title": "X-COM: Terror from the Deep"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenXcom",
+      "url": "https://openxcom.org/",
+      "hosts": [
+        "windows-x64",
+        "macos-arm64",
+        "macos-x64",
+        "linux-x64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "The Elder Scrolls II: Daggerfall",
+          "aliases": [
+            "Daggerfall"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Daggerfall Unity",
+      "url": "https://www.dfworkshop.net/",
+      "repo": "Interkarma/daggerfall-unity"
+    },
+    {
+      "games": [
+        {
+          "title": "Half-Life"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Xash3D FWGS",
+      "url": "https://github.com/FWGS/xash3d-fwgs",
+      "hosts": [
+        "windows-x64",
+        "linux-x64",
+        "android-arm64"
+      ]
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Ocarina of Time"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "Ship of Harkinian",
+      "url": "https://www.shipofharkinian.com/",
+      "repo": "HarbourMasters/Shipwright"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Majora's Mask"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "2 Ship 2 Harkinian",
+      "url": "https://github.com/HarbourMasters/2ship2harkinian",
+      "repo": "HarbourMasters/2ship2harkinian"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Majora's Mask"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "Zelda 64: Recompiled",
+      "url": "https://github.com/Zelda64Recomp/Zelda64Recomp",
+      "repo": "Zelda64Recomp/Zelda64Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Star Fox 64",
+          "aliases": [
+            "Lylat Wars"
+          ]
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "Starship",
+      "url": "https://github.com/HarbourMasters/Starship",
+      "repo": "HarbourMasters/Starship"
+    },
+    {
+      "games": [
+        {
+          "title": "Mario Kart 64"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "SpaghettiKart",
+      "url": "https://github.com/HarbourMasters/SpaghettiKart",
+      "repo": "HarbourMasters/SpaghettiKart"
+    },
+    {
+      "games": [
+        {
+          "title": "Perfect Dark"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "Perfect Dark port",
+      "url": "https://github.com/fgsfdsfgs/perfect_dark",
+      "repo": "fgsfdsfgs/perfect_dark"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: A Link to the Past"
+        }
+      ],
+      "platform": "snes",
+      "method": "fan_port",
+      "project": "zelda3",
+      "url": "https://github.com/snesrev/zelda3",
+      "repo": "snesrev/zelda3",
+      "hosts": [
+        "windows-x64"
+      ]
+    }
+  ]
+}
