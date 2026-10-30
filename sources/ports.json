@@ -811,6 +811,1025 @@
       "repo": "boykopovar/AnyPS5",
       "status": "experimental",
       "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30)."
+    },
+    {
+      "games": [
+        {
+          "title": "Bloodborne"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "bloodborne_pc",
+      "url": "https://github.com/deadinside28/bloodborne_pc",
+      "repo": "deadinside28/bloodborne_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Link's Awakening"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "LASRecomp",
+      "url": "https://github.com/peiikai/LASRecomp",
+      "repo": "peiikai/LASRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "inFAMOUS Second Son"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "iss_pc",
+      "url": "https://github.com/HayatoG/iss_pc",
+      "repo": "HayatoG/iss_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Lost Odyssey"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "LostOdysseyRecomp",
+      "url": "https://github.com/freefrank/LostOdysseyRecomp",
+      "repo": "freefrank/LostOdysseyRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Silent Hill"
+        }
+      ],
+      "platform": "ps1",
+      "method": "fan_port",
+      "project": "silent-hill-decomp",
+      "url": "https://github.com/SlickAmogus/silent-hill-decomp",
+      "repo": "SlickAmogus/silent-hill-decomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Driver 2",
+          "aliases": [
+            "Driver 2: Back on the Streets"
+          ]
+        }
+      ],
+      "platform": "ps1",
+      "method": "fan_port",
+      "project": "REDRIVER2",
+      "url": "https://github.com/OpenDriver2/REDRIVER2",
+      "repo": "OpenDriver2/REDRIVER2"
+    },
+    {
+      "games": [
+        {
+          "title": "Metroid Prime"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "fan_port",
+      "project": "MetroidPrimePort",
+      "url": "https://github.com/Odrannnn/MetroidPrimePort",
+      "repo": "Odrannnn/MetroidPrimePort"
+    },
+    {
+      "games": [
+        {
+          "title": "Metroid Prime 2: Echoes"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "fan_port",
+      "project": "MetroidPrime2Port",
+      "url": "https://github.com/Odrannnn/MetroidPrime2Port",
+      "repo": "Odrannnn/MetroidPrime2Port"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Smash Bros. Melee"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "fan_port",
+      "project": "melee-pc",
+      "url": "https://github.com/999sian/melee-pc",
+      "repo": "999sian/melee-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "The Last Guardian"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "tlg_pc",
+      "url": "https://github.com/HayatoG/tlg_pc",
+      "repo": "HayatoG/tlg_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Gravity Rush 2"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "gr2_pc",
+      "url": "https://github.com/HayatoG/gr2_pc",
+      "repo": "HayatoG/gr2_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Skyward Sword"
+        }
+      ],
+      "platform": "wii",
+      "method": "recomp",
+      "project": "SkyRecomp",
+      "url": "https://github.com/Apolinario-coder/SkyRecomp",
+      "repo": "Apolinario-coder/SkyRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "ICO"
+        }
+      ],
+      "platform": "ps2",
+      "method": "fan_port",
+      "project": "ico-pc",
+      "url": "https://github.com/nathanialf/ico-pc",
+      "repo": "nathanialf/ico-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Spider-Man: Edge of Time"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "EdgeOfTimeRecomp",
+      "url": "https://github.com/goliathret/EdgeOfTimeRecomp",
+      "repo": "goliathret/EdgeOfTimeRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Castlevania: Symphony of the Night"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "NocturneRecomp",
+      "url": "https://github.com/birabittoh/NocturneRecomp",
+      "repo": "birabittoh/NocturneRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Blake Stone: Aliens of Gold"
+        },
+        {
+          "title": "Blake Stone: Planet Strike"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "bstone",
+      "url": "https://github.com/bibendovsky/bstone",
+      "repo": "bibendovsky/bstone"
+    },
+    {
+      "games": [
+        {
+          "title": "GoldenEye 007"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "Project-Midas",
+      "url": "https://github.com/murkantor/Project-Midas",
+      "repo": "murkantor/Project-Midas"
+    },
+    {
+      "games": [
+        {
+          "title": "Sly Cooper and the Thievius Raccoonus"
+        }
+      ],
+      "platform": "ps2",
+      "method": "fan_port",
+      "project": "ProjectCane",
+      "url": "https://github.com/theclub654/ProjectCane",
+      "repo": "theclub654/ProjectCane"
+    },
+    {
+      "games": [
+        {
+          "title": "Mystical Ninja Starring Goemon"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "Goemon64Recomp",
+      "url": "https://github.com/klorfmorf/Goemon64Recomp",
+      "repo": "klorfmorf/Goemon64Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Dragon's Crown Pro"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "dragons-crown-pro-pc",
+      "url": "https://github.com/saulob/dragons-crown-pro-pc",
+      "repo": "saulob/dragons-crown-pro-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Monster Hunter Generations Ultimate"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "MHGURecomp",
+      "url": "https://github.com/morerokk/MHGURecomp",
+      "repo": "morerokk/MHGURecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Mortal Kombat: Shaolin Monks"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "OpenShao",
+      "url": "https://github.com/OAleex/OpenShao",
+      "repo": "OAleex/OpenShao"
+    },
+    {
+      "games": [
+        {
+          "title": "Peter Jackson's King Kong"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "king-kong-recompiled",
+      "url": "https://github.com/TekRantGaming/king-kong-recompiled",
+      "repo": "TekRantGaming/king-kong-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Pokémon: Let's Go, Eevee!"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "letsgo-recomp",
+      "url": "https://github.com/raulzrrs/letsgo-recomp",
+      "repo": "raulzrrs/letsgo-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Ninja Gaiden Black"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "ngbrecomp",
+      "url": "https://github.com/gamboozino/ngbrecomp",
+      "repo": "gamboozino/ngbrecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Def Jam: Fight for NY"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "DefJamFFNY-recomp",
+      "url": "https://github.com/vyanhursky/DefJamFFNY-recomp",
+      "repo": "vyanhursky/DefJamFFNY-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "MediEvil"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "medievil_2019_pc_port",
+      "url": "https://github.com/bc160201983/medievil_2019_pc_port",
+      "repo": "bc160201983/medievil_2019_pc_port"
+    },
+    {
+      "games": [
+        {
+          "title": "Uncharted: The Nathan Drake Collection"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "Uncharted-The-Nathan-Drake-Collection-PC-port",
+      "url": "https://github.com/bc160201983/Uncharted-The-Nathan-Drake-Collection-PC-port",
+      "repo": "bc160201983/Uncharted-The-Nathan-Drake-Collection-PC-port"
+    },
+    {
+      "games": [
+        {
+          "title": "Catacomb 3-D"
+        },
+        {
+          "title": "The Catacomb Abyss"
+        },
+        {
+          "title": "The Catacomb Armageddon"
+        },
+        {
+          "title": "The Catacomb Apocalypse"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "CatacombGL",
+      "url": "https://github.com/ArnoAnsems/CatacombGL",
+      "repo": "ArnoAnsems/CatacombGL"
+    },
+    {
+      "games": [
+        {
+          "title": "Eternal Darkness: Sanity's Requiem"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "recomp",
+      "project": "EternalDarknessRecomp",
+      "url": "https://github.com/griches/EternalDarknessRecomp",
+      "repo": "griches/EternalDarknessRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Deadly Premonition"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "DPRecomp",
+      "url": "https://github.com/LittleBitUA/DPRecomp",
+      "repo": "LittleBitUA/DPRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "WipEout Omega Collection"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "wipeout_pc",
+      "url": "https://github.com/AbdelmoumenDeghbouche/wipeout_pc",
+      "repo": "AbdelmoumenDeghbouche/wipeout_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Unicorn Overlord"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "unicorn_overlord_pc",
+      "url": "https://github.com/hachi23/unicorn_overlord_pc",
+      "repo": "hachi23/unicorn_overlord_pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Quake 4"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "openQ4",
+      "url": "https://github.com/themuffinator/openQ4",
+      "repo": "themuffinator/openQ4"
+    },
+    {
+      "games": [
+        {
+          "title": "Dune II: The Building of a Dynasty",
+          "aliases": [
+            "Dune II",
+            "Dune II: Battle for Arrakis"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "dunedynasty",
+      "url": "https://github.com/gameflorist/dunedynasty",
+      "repo": "gameflorist/dunedynasty"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Paper Mario"
+        }
+      ],
+      "platform": "wii",
+      "method": "recomp",
+      "project": "NewSuperPaperBros",
+      "url": "https://github.com/josiahg2502-glitch/NewSuperPaperBros",
+      "repo": "josiahg2502-glitch/NewSuperPaperBros"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Smash Bros. Brawl"
+        }
+      ],
+      "platform": "wii",
+      "method": "recomp",
+      "project": "BrawlRecompiled",
+      "url": "https://github.com/josiahg2502-glitch/BrawlRecompiled",
+      "repo": "josiahg2502-glitch/BrawlRecompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "New Super Mario Bros. Wii"
+        }
+      ],
+      "platform": "wii",
+      "method": "recomp",
+      "project": "NSMB-Wii-Multiplayer-Recompilation",
+      "url": "https://github.com/WitherBlitz/NSMB-Wii-Multiplayer-Recompilation",
+      "repo": "WitherBlitz/NSMB-Wii-Multiplayer-Recompilation"
+    },
+    {
+      "games": [
+        {
+          "title": "Yu-Gi-Oh! Forbidden Memories"
+        }
+      ],
+      "platform": "ps1",
+      "method": "recomp",
+      "project": "YuGiOhForbiddenMemoriesRecomp",
+      "url": "https://github.com/Unchiga/YuGiOhForbiddenMemoriesRecomp",
+      "repo": "Unchiga/YuGiOhForbiddenMemoriesRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Conker's Bad Fur Day"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "ConkerBFDReloaded",
+      "url": "https://github.com/DahSidiAbdallah/ConkerBFDReloaded",
+      "repo": "DahSidiAbdallah/ConkerBFDReloaded"
+    },
+    {
+      "games": [
+        {
+          "title": "Pokémon Snap"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "Snap64Recomp",
+      "url": "https://github.com/JackandBeans/Snap64Recomp",
+      "repo": "JackandBeans/Snap64Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Jet Force Gemini"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "JetForceGemini-Recomp",
+      "url": "https://github.com/TK22-26/JetForceGemini-Recomp",
+      "repo": "TK22-26/JetForceGemini-Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Halo: Combat Evolved"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "chupathingyce",
+      "url": "https://github.com/ChupathingyCE/chupathingyce",
+      "repo": "ChupathingyCE/chupathingyce"
+    },
+    {
+      "games": [
+        {
+          "title": "Sonic Adventure"
+        }
+      ],
+      "platform": "dreamcast",
+      "method": "recomp",
+      "project": "SARecomp",
+      "url": "https://github.com/sonicfreak1337/SARecomp",
+      "repo": "sonicfreak1337/SARecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Disney's Hercules",
+          "aliases": [
+            "Hercules"
+          ]
+        }
+      ],
+      "platform": "ps1",
+      "method": "recomp",
+      "project": "hercules-recompiled",
+      "url": "https://github.com/obaidr1/hercules-recompiled",
+      "repo": "obaidr1/hercules-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Crash of the Titans"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "crashott-pc",
+      "url": "https://github.com/VitoMiguelF/crashott-pc",
+      "repo": "VitoMiguelF/crashott-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Dead Rising 2: Case Zero"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Dead_Rising_2_Case_Zero_Xenon_Recomp",
+      "url": "https://github.com/wivi514/Dead_Rising_2_Case_Zero_Xenon_Recomp",
+      "repo": "wivi514/Dead_Rising_2_Case_Zero_Xenon_Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Dead Rising 2: Case West"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Dead_Rising_2_Case_West_Xenon_Recomp",
+      "url": "https://github.com/wivi514/Dead_Rising_2_Case_West_Xenon_Recomp",
+      "repo": "wivi514/Dead_Rising_2_Case_West_Xenon_Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Colin McRae Rally 2.0"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenCMR2",
+      "url": "https://github.com/pablocpas/OpenCMR2",
+      "repo": "pablocpas/OpenCMR2"
+    },
+    {
+      "games": [
+        {
+          "title": "The Lord of the Rings: The Two Towers"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "TooTawersRecomp",
+      "url": "https://github.com/Gumpolas/TooTawersRecomp",
+      "repo": "Gumpolas/TooTawersRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Crash Twinsanity"
+        }
+      ],
+      "platform": "ps2",
+      "method": "fan_port",
+      "project": "Crash-Twinsanity-Windows",
+      "url": "https://github.com/GioPixelGH/Crash-Twinsanity-Windows",
+      "repo": "GioPixelGH/Crash-Twinsanity-Windows"
+    },
+    {
+      "games": [
+        {
+          "title": "Crackdown"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "crackdown-xbox360-recompiled",
+      "url": "https://github.com/saulob/crackdown-xbox360-recompiled",
+      "repo": "saulob/crackdown-xbox360-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Ultima Underworld: The Stygian Abyss"
+        },
+        {
+          "title": "Ultima Underworld II: Labyrinth of Worlds"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "underworld-exhumed",
+      "url": "https://github.com/abedegno/underworld-exhumed",
+      "repo": "abedegno/underworld-exhumed"
+    },
+    {
+      "games": [
+        {
+          "title": "Raptor: Call of the Shadows"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "raptor",
+      "url": "https://github.com/skynettx/raptor",
+      "repo": "skynettx/raptor"
+    },
+    {
+      "games": [
+        {
+          "title": "Vandal Hearts"
+        }
+      ],
+      "platform": "ps1",
+      "method": "fan_port",
+      "project": "VandalHearts-PcPort",
+      "url": "https://github.com/HalmyLyseas/VandalHearts-PcPort",
+      "repo": "HalmyLyseas/VandalHearts-PcPort"
+    },
+    {
+      "games": [
+        {
+          "title": "Killer Instinct"
+        },
+        {
+          "title": "Killer Instinct 2"
+        }
+      ],
+      "platform": "arcade",
+      "method": "fan_port",
+      "project": "UltraCombo",
+      "url": "https://github.com/thefixinhixon/UltraCombo",
+      "repo": "thefixinhixon/UltraCombo"
+    },
+    {
+      "games": [
+        {
+          "title": "Hard Corps: Uprising"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "hard-corps-uprising-recompiled",
+      "url": "https://github.com/saulob/hard-corps-uprising-recompiled",
+      "repo": "saulob/hard-corps-uprising-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Geometry Wars: Retro Evolved 2"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "geometry-wars-retro-evolved-2-recompiled",
+      "url": "https://github.com/saulob/geometry-wars-retro-evolved-2-recompiled",
+      "repo": "saulob/geometry-wars-retro-evolved-2-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Need for Speed: Most Wanted"
+        }
+      ],
+      "platform": "pc",
+      "method": "recomp",
+      "project": "nfs-most-wanted-mac",
+      "url": "https://github.com/elforeign/nfs-most-wanted-mac",
+      "repo": "elforeign/nfs-most-wanted-mac"
+    },
+    {
+      "games": [
+        {
+          "title": "Need for Speed: Underground 2"
+        }
+      ],
+      "platform": "pc",
+      "method": "recomp",
+      "project": "nfsu2-recompiled",
+      "url": "https://github.com/codepdbh/nfsu2-recompiled",
+      "repo": "codepdbh/nfsu2-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Diablo II: Resurrected"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "d2r-mobile",
+      "url": "https://github.com/jhaizhou-ops/d2r-mobile",
+      "repo": "jhaizhou-ops/d2r-mobile"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: The Wind Waker HD"
+        }
+      ],
+      "platform": "wiiu",
+      "method": "recomp",
+      "project": "WindWakerHD-Android-Plus",
+      "url": "https://github.com/Nycolazs/WindWakerHD-Android-Plus",
+      "repo": "Nycolazs/WindWakerHD-Android-Plus"
+    },
+    {
+      "games": [
+        {
+          "title": "Dante's Inferno"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "hells-gate-recomp",
+      "url": "https://github.com/florinp93/hells-gate-recomp",
+      "repo": "florinp93/hells-gate-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Condemned 2: Bloodshot"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Condemned2Recomp",
+      "url": "https://github.com/psxrestore/Condemned2Recomp",
+      "repo": "psxrestore/Condemned2Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "The Darkness"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Estacado-The-Darkness-Recomp",
+      "url": "https://github.com/invinceble55-wq/Estacado-The-Darkness-Recomp",
+      "repo": "invinceble55-wq/Estacado-The-Darkness-Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Call of Duty: Finest Hour"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "FinestHourRemastered",
+      "url": "https://github.com/crazyriddler/FinestHourRemastered",
+      "repo": "crazyriddler/FinestHourRemastered"
+    },
+    {
+      "games": [
+        {
+          "title": "inFAMOUS First Light"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "infamous-first-light-pc",
+      "url": "https://github.com/VantageEX/infamous-first-light-pc",
+      "repo": "VantageEX/infamous-first-light-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Army of Two"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "ArmyOfTwoRecomp",
+      "url": "https://github.com/nikolaygorb/ArmyOfTwoRecomp",
+      "repo": "nikolaygorb/ArmyOfTwoRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "WET"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "wet-recomp",
+      "url": "https://github.com/Supermedo/wet-recomp",
+      "repo": "Supermedo/wet-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Earthworm Jim HD"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "earthworm-jim-hd-recompiled",
+      "url": "https://github.com/TekRantGaming/earthworm-jim-hd-recompiled",
+      "repo": "TekRantGaming/earthworm-jim-hd-recompiled"
+    },
+    {
+      "games": [
+        {
+          "title": "Urban Reign"
+        }
+      ],
+      "platform": "ps2",
+      "method": "recomp",
+      "project": "urban-reign-recomp",
+      "url": "https://github.com/thiagordsfx/urban-reign-recomp",
+      "repo": "thiagordsfx/urban-reign-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Project Gotham Racing 2"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "pgr2-recomp",
+      "url": "https://github.com/hk21x/pgr2-recomp",
+      "repo": "hk21x/pgr2-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Forza Motorsport 2"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Forza-Motorsport-2-ReGPU",
+      "url": "https://github.com/zer0ducksgiven/Forza-Motorsport-2-ReGPU",
+      "repo": "zer0ducksgiven/Forza-Motorsport-2-ReGPU"
+    },
+    {
+      "games": [
+        {
+          "title": "Need for Speed: Most Wanted"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "MostWanted-Android",
+      "url": "https://github.com/RanggaCasper/MostWanted-Android",
+      "repo": "RanggaCasper/MostWanted-Android"
+    },
+    {
+      "games": [
+        {
+          "title": "Mortal Kombat: Shaolin Monks"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "ShaolinMonks-Android",
+      "url": "https://github.com/RanggaCasper/ShaolinMonks-Android",
+      "repo": "RanggaCasper/ShaolinMonks-Android"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Breath of the Wild"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "SavageWindRecomp",
+      "url": "https://github.com/Revivedx/SavageWindRecomp",
+      "repo": "Revivedx/SavageWindRecomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Tears of the Kingdom"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "ultratears",
+      "url": "https://github.com/kuraeow/ultratears",
+      "repo": "kuraeow/ultratears",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Forza Horizon"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "pinyon-shift",
+      "url": "https://github.com/arcanite24/pinyon-shift",
+      "repo": "arcanite24/pinyon-shift",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Killzone 3"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "project-helghast",
+      "url": "https://github.com/undecuple/project-helghast",
+      "repo": "undecuple/project-helghast",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Killzone 2"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "project-pyrrhus",
+      "url": "https://github.com/undecuple/project-pyrrhus",
+      "repo": "undecuple/project-pyrrhus",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Gears of War 2"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "gears-of-war-2-pc-port",
+      "url": "https://github.com/santiquiroz/gears-of-war-2-pc-port",
+      "repo": "santiquiroz/gears-of-war-2-pc-port",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Smash Bros. for Wii U"
+        }
+      ],
+      "platform": "wiiu",
+      "method": "recomp",
+      "project": "Smash4PC",
+      "url": "https://github.com/josiahg2502-glitch/Smash4PC",
+      "repo": "josiahg2502-glitch/Smash4PC",
+      "status": "experimental"
     }
   ]
 }

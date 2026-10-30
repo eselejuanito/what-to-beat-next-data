@@ -1,11 +1,30 @@
 {
   "note": "Repositories the weekly search (scripts/discover.mjs) must not suggest again: looked at and left out (tools, engines without a game, work in progress with nothing to play, game files included).",
   "repos": [
+    "Awakenchan/LanternEngine",
+    "CrownParkComputing/Xbox360-Native-Ports",
+    "GenryTheFox0/Project-2099",
+    "JNechaevsky/international-doom",
+    "LNPANDY/NX2Apple",
+    "Liondarkz/issn_pc",
     "N64Recomp/N64Recomp",
+    "NBlood/NBlood",
+    "RetroPortingToolKit/Retro-Launcher",
     "Vector35/binaryninja-api",
+    "Xeeynamo/sotn-decomp",
+    "andrebrumdev/gow2-recomp",
+    "bradharding/doomretro",
+    "centollOS/SwitchWakerHD",
+    "dxx-redux/dxx-redux",
     "encounter/decomp-toolkit",
     "encounter/objdiff",
+    "fabiangreffrath/woof",
+    "jackpoison-prog/RingOut",
+    "jkdansereau/goldeneye-pc-port",
+    "portingpete/The-Darkness-Recomp",
     "rt64/rt64",
-    "sp00nznet/ps3recomp"
+    "sp00nznet/ps3recomp",
+    "tmcleroy/cps2recomp",
+    "wojciech-graj/doom-ascii"
   ]
 }
