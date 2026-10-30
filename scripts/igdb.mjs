@@ -152,22 +152,31 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
 
 // Well-liked games of the consoles that have no per-game emulator list (NES to Switch, arcade): IGDB's
 // rating of at least 60 % from at least 10 votes, main games, remakes and remasters only. Taken again
-// every REFRESH_DAYS. Returns { "<console id>": [{ title, id, name, slug, cover?, year?, rating, votes, main?, extra?, full? }] }.
+// every REFRESH_DAYS. Returns { at, consoles: { "<console id>": [{ id, name, slug, cover?, year?, rating, votes, main?, extra?, full? }] } }.
+// A game counts for a console it came out on within two years of its first release (not Super Mario Bros. 3
+// as a 3DS game through the Virtual Console); on recent consoles, not when it is also on PC, where it runs natively.
 export const CLASSIC_CONSOLES = ['nes', 'snes', 'n64', 'switch', 'gb', 'gbc', 'gba', 'nds', '3ds', 'ps1', 'ps4', 'vita',
-  'xbox', 'xbox360', 'genesis', 'mastersystem', 'gamegear', 'segacd', '32x', 'saturn', 'dreamcast', 'pce', 'pcecd', 'neogeo', 'arcade']
-;
+  'xbox', 'xbox360', 'genesis', 'mastersystem', 'gamegear', 'segacd', '32x', 'saturn', 'dreamcast', 'pce', 'pcecd', 'neogeo', 'arcade'];
+const ALSO_ON_PC = new Set(['switch', 'ps4', 'vita', '3ds', 'xbox', 'xbox360']);
 export async function classics(previous, { log = console.log } = {}) {
   if (previous && previous.at && Date.now() - previous.at < REFRESH_DAYS * 24 * 3600 * 1000) return previous;
   const auth = await token();
   if (!auth) return previous || null;
   const out = { at: Date.now(), consoles: {} };
   for (const consoleId of CLASSIC_CONSOLES) {
-    const list = [];
+    const ids = PLATFORMS[consoleId];
+    const found = [];
     for (let offset = 0; offset < 5000; offset += 500) {
-      const page = await query(auth, 'games', `fields name,slug,cover.image_id,first_release_date,total_rating,total_rating_count; where platforms = (${PLATFORMS[consoleId].join(',')}) & total_rating >= 60 & total_rating_count >= 10 & game_type = (0,8,9); sort total_rating_count desc; limit 500; offset ${offset};`);
-      list.push(...page);
+      const page = await query(auth, 'games', `fields name,slug,cover.image_id,first_release_date,total_rating,total_rating_count,platforms,release_dates.platform,release_dates.y; where platforms = (${ids.join(',')}) & total_rating >= 60 & total_rating_count >= 10 & game_type = (0,8,9); sort total_rating_count desc; limit 500; offset ${offset};`);
+      found.push(...page);
       if (page.length < 500) break;
     }
+    const firstYear = (game) => (game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : null);
+    const list = found.filter((game) => {
+      if (ALSO_ON_PC.has(consoleId) && (game.platforms || []).some((id) => PLATFORMS.pc.includes(id))) return false;
+      const years = (game.release_dates || []).filter((date) => ids.includes(date.platform) && date.y).map((date) => date.y);
+      return !years.length || !firstYear(game) || Math.min(...years) <= firstYear(game) + 2;
+    });
     const times = new Map();
     for (let i = 0; i < list.length; i += 500) {
       for (const time of await query(auth, 'game_time_to_beats', `fields game_id,hastily,normally,completely; where game_id = (${list.slice(i, i + 500).map((game) => game.id).join(',')}); limit 500;`)) times.set(time.game_id, time);
@@ -181,7 +190,7 @@ export async function classics(previous, { log = console.log } = {}) {
         main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
       }).filter(([, value]) => value !== undefined));
     });
-    log(`classics: ${consoleId} ${list.length}`);
+    log(`classics: ${consoleId} ${list.length} (of ${found.length})`);
   }
   return out;
 }
