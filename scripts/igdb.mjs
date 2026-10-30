@@ -42,7 +42,7 @@ async function query(auth, endpoint, body) {
 }
 
 const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-const FIELDS = 'fields name,slug,cover.image_id,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
+const FIELDS = 'fields name,slug,cover.image_id,genres,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
 // A rating from a handful of votes says little (100 % from 2 people): left out under this many.
 const MIN_VOTES = 5;
 
@@ -121,6 +121,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
     const time = times.get(game.id) || {};
     games[id] = Object.fromEntries(Object.entries({
       id: game.id, name: game.name, slug: game.slug, cover: game.cover ? game.cover.image_id : undefined,
+      genres: game.genres && game.genres.length ? game.genres : undefined,
       year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
       rating: game.total_rating && game.total_rating_count >= MIN_VOTES ? Math.round(game.total_rating) : undefined,
       votes: game.total_rating && game.total_rating_count >= MIN_VOTES ? game.total_rating_count : undefined,
@@ -133,15 +134,16 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   const ratings = new Map();
   const keptIds = [...new Set(kept.map(([, game]) => game.id))];
   for (let i = 0; i < keptIds.length; i += 500) {
-    for (const game of await query(auth, 'games', `fields total_rating,total_rating_count,slug,cover.image_id; where id = (${keptIds.slice(i, i + 500).join(',')}); limit 500;`)) ratings.set(game.id, game);
+    for (const game of await query(auth, 'games', `fields total_rating,total_rating_count,slug,cover.image_id,genres; where id = (${keptIds.slice(i, i + 500).join(',')}); limit 500;`)) ratings.set(game.id, game);
   }
   for (const [id, game] of kept) {
     const fresh = ratings.get(game.id);
     if (!fresh) continue;
     // The page (slug) and cover (image id) too: kept games from before they were stored get them here.
-    const { rating, votes, slug, cover, ...rest } = game;
+    const { rating, votes, slug, cover, genres, ...rest } = game;
     games[id] = Object.fromEntries(Object.entries({
       ...rest, slug: fresh.slug, cover: fresh.cover ? fresh.cover.image_id : undefined,
+      genres: fresh.genres && fresh.genres.length ? fresh.genres : undefined,
       rating: fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? Math.round(fresh.total_rating) : undefined,
       votes: fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? fresh.total_rating_count : undefined,
     }).filter(([, value]) => value !== undefined));
@@ -152,22 +154,23 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
 
 // Well-liked games of the consoles that have no per-game emulator list (NES to Switch, arcade): IGDB's
 // rating of at least 60 % from at least 10 votes, main games, remakes and remasters only. Taken again
-// every REFRESH_DAYS. Returns { at, consoles: { "<console id>": [{ id, name, slug, cover?, year?, rating, votes, main?, extra?, full? }] } }.
+// every REFRESH_DAYS. Returns { at, consoles: { "<console id>": [{ id, name, slug, cover?, genres?, year?, rating, votes, main?, extra?, full? }] } }; genres: IGDB genre ids.
 // A game counts for a console it came out on within two years of its first release (not Super Mario Bros. 3
 // as a 3DS game through the Virtual Console); on recent consoles, not when it is also on PC, where it runs natively.
 export const CLASSIC_CONSOLES = ['nes', 'snes', 'n64', 'switch', 'gb', 'gbc', 'gba', 'nds', '3ds', 'ps1', 'ps4', 'vita',
   'xbox', 'xbox360', 'genesis', 'mastersystem', 'gamegear', 'segacd', '32x', 'saturn', 'dreamcast', 'pce', 'pcecd', 'neogeo', 'arcade'];
 const ALSO_ON_PC = new Set(['switch', 'ps4', 'vita', '3ds', 'xbox', 'xbox360']);
 export async function classics(previous, { log = console.log } = {}) {
-  if (previous && previous.at && Date.now() - previous.at < REFRESH_DAYS * 24 * 3600 * 1000) return previous;
+  // Taken again when older than REFRESH_DAYS or from before genres were kept (version 2).
+  if (previous && previous.version === 2 && previous.at && Date.now() - previous.at < REFRESH_DAYS * 24 * 3600 * 1000) return previous;
   const auth = await token();
   if (!auth) return previous || null;
-  const out = { at: Date.now(), consoles: {} };
+  const out = { version: 2, at: Date.now(), consoles: {} };
   for (const consoleId of CLASSIC_CONSOLES) {
     const ids = PLATFORMS[consoleId];
     const found = [];
     for (let offset = 0; offset < 5000; offset += 500) {
-      const page = await query(auth, 'games', `fields name,slug,cover.image_id,first_release_date,total_rating,total_rating_count,platforms,release_dates.platform,release_dates.y; where platforms = (${ids.join(',')}) & total_rating >= 60 & total_rating_count >= 10 & game_type = (0,8,9); sort total_rating_count desc; limit 500; offset ${offset};`);
+      const page = await query(auth, 'games', `fields name,slug,cover.image_id,genres,first_release_date,total_rating,total_rating_count,platforms,release_dates.platform,release_dates.y; where platforms = (${ids.join(',')}) & total_rating >= 60 & total_rating_count >= 10 & game_type = (0,8,9); sort total_rating_count desc; limit 500; offset ${offset};`);
       found.push(...page);
       if (page.length < 500) break;
     }
@@ -187,6 +190,7 @@ export async function classics(previous, { log = console.log } = {}) {
       const time = times.get(game.id) || {};
       return Object.fromEntries(Object.entries({
         id: game.id, name: game.name, slug: game.slug, cover: game.cover ? game.cover.image_id : undefined,
+        genres: game.genres && game.genres.length ? game.genres : undefined,
         year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
         rating: Math.round(game.total_rating), votes: game.total_rating_count,
         main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
