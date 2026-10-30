@@ -7,7 +7,7 @@ Rebuilt every day by GitHub Actions and published at **https://eselejuanito.gith
 | File | What |
 |---|---|
 | `index.json` | version, date, sources and licenses, list of files |
-| `ports.json` | fan ports and recompilations: the game, the project, the systems of its latest release |
+| `ports.json` | fan ports, recompilations, PortMaster (Linux handhelds) and nxnative (Switch games on Apple chips): the game, the project, the systems it runs on |
 | `emu/ps2.json` | PlayStation 2 games and how well PCSX2 runs them |
 | `emu/ps3.json` | PlayStation 3 games and how well RPCS3 runs them |
 
@@ -25,6 +25,8 @@ Status: `verified` (playable, or an official build of the port for that system),
 |---|---|---|
 | [sources/ports.json](sources/ports.json) (curated here) + each project's GitHub releases | fan ports, recompilations | GPL-3.0 (this repository) |
 | [RPCS3 compatibility list](https://rpcs3.net/compatibility) | PlayStation 3 | RPCS3's public API; credited and linked |
+| [PortMaster](https://portmaster.games/) (`ports.json` of [PortMaster-New](https://github.com/PortsMaster/PortMaster-New)'s latest release) | ports for Linux handhelds | MIT |
+| [nxnative](https://github.com/seedds/nxnative) games table | Switch games run natively on Mac, iPhone and iPad | MIT |
 | [PCSX2 GameIndex.yaml](https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml) | PlayStation 2 | GPL-3.0 |
 
 ## Run it

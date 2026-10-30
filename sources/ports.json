@@ -637,6 +637,148 @@
       "hosts": [
         "windows-x64"
       ]
+    },
+    {
+      "games": [
+        {
+          "title": "P.T."
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "P.T. for PC",
+      "url": "https://github.com/LoreanXavier/pt-pc",
+      "repo": "LoreanXavier/pt-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Jak and Daxter: The Precursor Legacy"
+        },
+        {
+          "title": "Jak II"
+        }
+      ],
+      "platform": "ps2",
+      "method": "fan_port",
+      "project": "OpenGOAL",
+      "url": "https://opengoal.dev/",
+      "repo": "open-goal/launcher"
+    },
+    {
+      "games": [
+        {
+          "title": "Sonic Unleashed"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Unleashed Recompiled",
+      "url": "https://github.com/hedge-dev/UnleashedRecomp",
+      "repo": "hedge-dev/UnleashedRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Pandora's Tower"
+        }
+      ],
+      "platform": "wii",
+      "method": "recomp",
+      "project": "Pandora's Tower PC",
+      "url": "https://github.com/RecompPort/pandora-tower-pc",
+      "repo": "RecompPort/pandora-tower-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Mario 64"
+        }
+      ],
+      "platform": "n64",
+      "method": "fan_port",
+      "project": "sm64coopdx",
+      "url": "https://sm64coopdx.com/",
+      "repo": "coop-deluxe/sm64coopdx"
+    },
+    {
+      "games": [
+        {
+          "title": "Heroes of Might and Magic II: The Succession Wars",
+          "aliases": [
+            "Heroes of Might and Magic II",
+            "Heroes of Might and Magic 2: Gold"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "fheroes2",
+      "url": "https://ihhub.github.io/fheroes2/",
+      "repo": "ihhub/fheroes2"
+    },
+    {
+      "games": [
+        {
+          "title": "Caesar III",
+          "aliases": [
+            "Caesar 3"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Augustus",
+      "url": "https://github.com/Keriew/augustus",
+      "repo": "Keriew/augustus"
+    },
+    {
+      "games": [
+        {
+          "title": "Cave Story",
+          "aliases": [
+            "Doukutsu Monogatari",
+            "Cave Story+"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "NXEngine-evo",
+      "url": "https://github.com/nxengine/nxengine-evo",
+      "repo": "nxengine/nxengine-evo"
+    },
+    {
+      "games": [
+        {
+          "title": "Warcraft II: Tides of Darkness",
+          "aliases": [
+            "Warcraft II: Battle.net Edition",
+            "Warcraft 2"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Wargus",
+      "url": "https://wargus.github.io/",
+      "repo": "Wargus/wargus"
+    },
+    {
+      "games": [
+        {
+          "title": "System Shock",
+          "aliases": [
+            "System Shock: Classic",
+            "System Shock: Enhanced Edition"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Shockolate",
+      "url": "https://github.com/Interrupt/systemshock",
+      "repo": "Interrupt/systemshock"
     }
   ]
 }

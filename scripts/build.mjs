@@ -2,6 +2,8 @@
 //   sources/ports.json  fan ports and recompilations, curated; systems from each project's latest GitHub release
 //   RPCS3               PlayStation 3 compatibility list (rpcs3.net public API, one page a second)
 //   PCSX2               PlayStation 2 game database (GameIndex.yaml in the PCSX2 repository, GPL-3.0)
+//   PortMaster          ports for Linux handhelds (ports.json of PortsMaster/PortMaster-New's latest release, MIT)
+//   nxnative            Switch games whose own code runs natively on Apple chips (its games table, MIT)
 // Only facts and links to each project's own page; never game files. Node 20+, no dependencies.
 // Usage: node scripts/build.mjs [--offline <dir with rpcs3/*.json and GameIndex.yaml>]   (GITHUB_TOKEN optional)
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -56,7 +58,7 @@ export function hostsOf(name) {
   return [];
 }
 
-async function ports() {
+export async function ports() {
   const { ports: list } = JSON.parse(await readFile(join(ROOT, 'sources/ports.json'), 'utf8'));
   const headers = { Accept: 'application/vnd.github+json', ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) };
   const out = [];
@@ -64,7 +66,9 @@ async function ports() {
     let hosts = port.hosts || [];
     let release = null;
     if (port.repo) {
-      const latest = await get(`https://api.github.com/repos/${port.repo}/releases/latest`, { headers });
+      // "latest" skips pre-releases; some projects only publish those (a "continuous" build).
+      const latest = await get(`https://api.github.com/repos/${port.repo}/releases/latest`, { headers })
+        || ((await get(`https://api.github.com/repos/${port.repo}/releases?per_page=1`, { headers })) || [])[0];
       if (latest) {
         hosts = [...new Set(latest.assets.flatMap((asset) => hostsOf(asset.name)))].sort();
         release = { version: latest.tag_name, date: (latest.published_at || '').slice(0, 10) };
@@ -81,6 +85,43 @@ async function ports() {
     console.log(`ports: ${port.project} ${hosts.join(' ') || '(no systems)'}`);
   }
   return out;
+}
+
+// ---- PortMaster: games packaged for Linux handhelds (Anbernic, TrimUI, …) -------------------------
+// Most need the owner's files of the game (bought on Steam, GOG, itch.io); "ready to run" ones come
+// with them (free games). A console game's port (Super Mario 64) takes that console from the
+// curated list, else "pc".
+export async function portmaster(curated) {
+  const data = await get('https://github.com/PortsMaster/PortMaster-New/releases/latest/download/ports.json');
+  const consoleOf = new Map();
+  for (const port of curated) if (port.platform !== 'pc') for (const game of port.games) for (const key of game.keys) consoleOf.set(key, port.platform);
+  const ARCH = { aarch64: 'arm64', armhf: 'arm' };
+  return Object.values((data && data.ports) || {}).flatMap((port) => {
+    const title = port.attr && port.attr.title;
+    const key = matchKey(title);
+    const hosts = [...new Set((port.attr.arch || ['aarch64']).map((arch) => ARCH[arch]).filter(Boolean))].map((arch) => `linux-handheld-${arch}`);
+    if (!key || !hosts.length) return [];
+    return [{
+      games: [{ title, keys: [key] }],
+      platform: consoleOf.get(key) || 'pc', method: 'fan_port', project: 'PortMaster',
+      url: `https://portmaster.games/detail.html?name=${encodeURIComponent(port.name.replace(/\.zip$/, ''))}`,
+      hosts, status: 'verified', release: { version: port.source.release_id, date: port.source.date_updated },
+      needs: port.attr.rtr ? [] : ['game-files'],
+    }];
+  });
+}
+
+// ---- nxnative: Switch games run natively on Apple chips (Mac; iPhone 15 Pro / M1 iPad and later) --
+// Not an emulator nor a port: the game's own ARM code runs directly, with its graphics rebuilt on Metal.
+export async function nxnative() {
+  const text = await get('https://raw.githubusercontent.com/seedds/nxnative/HEAD/docs/images/gallery.tsv', { json: false });
+  const games = (text || '').split('\n').filter((line) => line && !line.startsWith('#'))
+    .map((line) => line.split('\t')[1]).filter(Boolean)
+    .map((title) => ({ title, keys: [matchKey(title)] }));
+  return games.length ? [{
+    games, platform: 'switch', method: 'native_layer', project: 'nxnative', url: 'https://github.com/seedds/nxnative',
+    hosts: ['ios-arm64', 'macos-arm64'], status: 'verified', release: null, needs: ['game-files', 'console-keys'],
+  }] : [];
 }
 
 // ---- Emulators: one file per console, games grouped by title, best status of any of their serials --
@@ -152,6 +193,8 @@ async function pcsx2(offline) {
 const SOURCES = [
   { id: 'ports', name: 'Curated ports list', url: 'https://github.com/eselejuanito/what-to-beat-next-data/blob/main/sources/ports.json', license: 'GPL-3.0', note: 'systems from each project\'s latest GitHub release' },
   { id: 'rpcs3', name: 'RPCS3 compatibility list', url: 'https://rpcs3.net/compatibility', license: 'RPCS3 public API, linked back', note: 'PlayStation 3' },
+  { id: 'portmaster', name: 'PortMaster', url: 'https://portmaster.games/', license: 'MIT', note: 'Linux handhelds' },
+  { id: 'nxnative', name: 'nxnative', url: 'https://github.com/seedds/nxnative', license: 'MIT', note: 'Switch games on Apple chips' },
   { id: 'pcsx2', name: 'PCSX2 game database', url: 'https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml', license: 'GPL-3.0', note: 'PlayStation 2' },
 ];
 
@@ -162,7 +205,8 @@ async function main() {
   const write = (name, data) => writeFile(join(OUT, name), JSON.stringify(data));
   const generated = new Date().toISOString();
 
-  const portList = await ports();
+  const curated = await ports();
+  const portList = [...curated, ...await portmaster(curated), ...await nxnative()];
   await write('ports.json', { generated, ports: portList });
   const emulators = {
     ps3: { project: 'RPCS3', url: 'https://rpcs3.net/', games: await rpcs3(offline) },
