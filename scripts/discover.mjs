@@ -70,6 +70,11 @@ for (const repo of found.values()) {
 }
 candidates.sort((a, b) => b.repo.stargazers_count - a.repo.stargazers_count);
 
+// The places looked at by hand (sources/watch.json), as a checklist under the table.
+const watch = JSON.parse(await readFile(join(ROOT, 'sources/watch.json'), 'utf8'));
+const checklist = (items) => items.map((item) => `- [ ] ${item.url ? `[${item.name}](${item.url})` : item.name}: ${item.what}`);
+const firstMonday = new Date().getUTCDate() <= 7;
+
 const cell = (text) => String(text || '').replace(/\|/g, '\\|').replace(/\s+/g, ' ').slice(0, 140);
 const body = [
   `Projects found on ${new Date().toISOString().slice(0, 10)} that publish a release with builds and are not in \`sources/ports.json\` or \`sources/ignore.json\` (at least ${MIN_STARS} stars, updated in the last ${SINCE_DAYS} days).`,
@@ -80,6 +85,12 @@ const body = [
   '|---|---|---|---|---|',
   ...candidates.map(({ repo, release, hosts }) => `| [${repo.full_name}](${repo.html_url}) | ${repo.stargazers_count} | ${cell(release.tag_name)} (${(release.published_at || '').slice(0, 10)}) | ${hosts.join(' ')} | ${cell(repo.description)} |`),
   ...(candidates.length ? [] : ['| (nothing new this week) | | | | |']),
+  '',
+  '### By hand this week',
+  ...checklist(watch.weekly.filter((item) => item.url)),
+  ...(firstMonday ? ['', '### By hand this month', ...checklist(watch.monthly)] : []),
+  '',
+  `Read every day without anyone: ${watch.daily.map((item) => item.name).join(', ')}. No list needed (emulation already runs nearly everything): ${watch.done.consoles.join(', ')}.`,
 ].join('\n');
 
 console.log(`discover: ${found.size} new projects, ${candidates.length} with a release to review`);
