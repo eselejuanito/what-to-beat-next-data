@@ -13,7 +13,7 @@
 // Usage: node scripts/build.mjs [--offline <dir with rpcs3/*.json and GameIndex.yaml>]   (GITHUB_TOKEN optional)
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { igdb } from './igdb.mjs';
+import { igdb, classics } from './igdb.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'site');
@@ -354,11 +354,18 @@ async function main() {
   const times = offline ? null : await igdb(wanted, previous);
   const igdbFile = times ? { generated, ...times } : previous;
   if (igdbFile) await write('igdb.json', igdbFile);
+  // Well-liked games of the consoles without an emulator list (NES to Switch, arcade), monthly.
+  const previousClassics = offline ? null : await get(`${BASE}classics.json`).catch(() => null);
+  const fresh = offline ? null : await classics(previousClassics);
+  // Kept as it was (same "generated", so the extension does not download it again) until it is taken anew.
+  const classicsFile = fresh && (fresh === previousClassics ? previousClassics : { ...fresh, generated });
+  if (classicsFile) await write('classics.json', classicsFile);
 
   await write('index.json', {
     version: 1, generated, sources: SOURCES,
     files: {
       ports: { path: 'ports.json', count: portList.length },
+      ...(classicsFile ? { classics: { path: 'classics.json', count: Object.values(classicsFile.consoles).reduce((sum, list) => sum + list.length, 0), generated: classicsFile.generated } } : {}),
       ...(igdbFile ? { igdb: { path: 'igdb.json', count: Object.keys(igdbFile.games).length, generated: igdbFile.generated } } : {}),
       emu: Object.fromEntries(Object.entries(emulators).map(([platform, emulator]) => [platform, { path: `emu/${platform}.json`, count: emulator.games.length, project: emulator.project, url: emulator.url }])),
     },

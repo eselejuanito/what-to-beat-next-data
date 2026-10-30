@@ -175,7 +175,9 @@ export async function classics(previous, { log = console.log } = {}) {
     const list = found.filter((game) => {
       if (ALSO_ON_PC.has(consoleId) && (game.platforms || []).some((id) => PLATFORMS.pc.includes(id))) return false;
       const years = (game.release_dates || []).filter((date) => ids.includes(date.platform) && date.y).map((date) => date.y);
-      return !years.length || !firstYear(game) || Math.min(...years) <= firstYear(game) + 2;
+      // Arcade: only games that came out there first (not Super Mario World on the Nintendo Super System).
+      const slack = consoleId === 'arcade' ? 0 : 2;
+      return !years.length || !firstYear(game) || Math.min(...years) <= firstYear(game) + slack;
     });
     const times = new Map();
     for (let i = 0; i < list.length; i += 500) {

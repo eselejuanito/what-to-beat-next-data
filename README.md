@@ -9,6 +9,7 @@ Rebuilt every day by GitHub Actions and published at **https://eselejuanito.gith
 | `index.json` | version, date, sources and licenses, list of files |
 | `ports.json` | fan ports, recompilations, PortMaster (Linux handhelds) and nxnative (Switch games on Apple chips): the game, the project, the systems it runs on |
 | `igdb.json` | release year, rating and time to beat (from IGDB) of the catalog's games, for the extension's catalog page |
+| `classics.json` | well-liked games (IGDB: 60 %+ from 10+ votes) of the consoles without an emulator list, NES to Switch and arcade, each with its year, rating, votes and time; taken again monthly |
 | `emu/ps2.json` | PlayStation 2 games and how well PCSX2 runs them |
 | `emu/ps3.json` | PlayStation 3 games and how well RPCS3 runs them |
 | `emu/gamecube.json`, `emu/wii.json` | GameCube and Wii games and how well Dolphin runs them (from its wiki: CC BY-SA 3.0, these two files too) |
