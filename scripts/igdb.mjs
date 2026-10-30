@@ -123,6 +123,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
       id: game.id, name: game.name, slug: game.slug, cover: game.cover ? game.cover.image_id : undefined,
       year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
       rating: game.total_rating && game.total_rating_count >= MIN_VOTES ? Math.round(game.total_rating) : undefined,
+      votes: game.total_rating && game.total_rating_count >= MIN_VOTES ? game.total_rating_count : undefined,
       main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
       at: now,
     }).filter(([, value]) => value !== undefined));
@@ -138,14 +139,51 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
     const fresh = ratings.get(game.id);
     if (!fresh) continue;
     // The page (slug) and cover (image id) too: kept games from before they were stored get them here.
-    const { rating, slug, cover, ...rest } = game;
+    const { rating, votes, slug, cover, ...rest } = game;
     games[id] = Object.fromEntries(Object.entries({
       ...rest, slug: fresh.slug, cover: fresh.cover ? fresh.cover.image_id : undefined,
       rating: fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? Math.round(fresh.total_rating) : undefined,
+      votes: fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? fresh.total_rating_count : undefined,
     }).filter(([, value]) => value !== undefined));
   }
   log(`igdb: ${Object.keys(games).length} games, ${[...Object.values(games)].filter((game) => game.main || game.extra).length} with a time; ${Object.keys(misses).length} not found`);
   return { games, misses };
+}
+
+// Well-liked games of the consoles that have no per-game emulator list (NES to Switch, arcade): IGDB's
+// rating of at least 60 % from at least 10 votes, main games, remakes and remasters only. Taken again
+// every REFRESH_DAYS. Returns { "<console id>": [{ title, id, name, slug, cover?, year?, rating, votes, main?, extra?, full? }] }.
+export const CLASSIC_CONSOLES = ['nes', 'snes', 'n64', 'switch', 'gb', 'gbc', 'gba', 'nds', '3ds', 'ps1', 'ps4', 'vita',
+  'xbox', 'xbox360', 'genesis', 'mastersystem', 'gamegear', 'segacd', '32x', 'saturn', 'dreamcast', 'pce', 'pcecd', 'neogeo', 'arcade']
+;
+export async function classics(previous, { log = console.log } = {}) {
+  if (previous && previous.at && Date.now() - previous.at < REFRESH_DAYS * 24 * 3600 * 1000) return previous;
+  const auth = await token();
+  if (!auth) return previous || null;
+  const out = { at: Date.now(), consoles: {} };
+  for (const consoleId of CLASSIC_CONSOLES) {
+    const list = [];
+    for (let offset = 0; offset < 5000; offset += 500) {
+      const page = await query(auth, 'games', `fields name,slug,cover.image_id,first_release_date,total_rating,total_rating_count; where platforms = (${PLATFORMS[consoleId].join(',')}) & total_rating >= 60 & total_rating_count >= 10 & game_type = (0,8,9); sort total_rating_count desc; limit 500; offset ${offset};`);
+      list.push(...page);
+      if (page.length < 500) break;
+    }
+    const times = new Map();
+    for (let i = 0; i < list.length; i += 500) {
+      for (const time of await query(auth, 'game_time_to_beats', `fields game_id,hastily,normally,completely; where game_id = (${list.slice(i, i + 500).map((game) => game.id).join(',')}); limit 500;`)) times.set(time.game_id, time);
+    }
+    out.consoles[consoleId] = list.map((game) => {
+      const time = times.get(game.id) || {};
+      return Object.fromEntries(Object.entries({
+        id: game.id, name: game.name, slug: game.slug, cover: game.cover ? game.cover.image_id : undefined,
+        year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
+        rating: Math.round(game.total_rating), votes: game.total_rating_count,
+        main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
+      }).filter(([, value]) => value !== undefined));
+    });
+    log(`classics: ${consoleId} ${list.length}`);
+  }
+  return out;
 }
 
 // node scripts/igdb.mjs --probe: a few known titles, to check the credentials and the queries.
@@ -156,6 +194,11 @@ if (import.meta.url === `file://${process.argv[1]}` && process.argv.includes('--
     ['n64', 'Super Mario 64'], ['ps4', 'P.T.'], ['pc', 'Stardew Valley'], ['pc', 'Balatro'], ['pc', '-SPROUT-'],
     ['pc', 'The Elder Scrolls III: Morrowind'], ['xbox360', 'Sonic Unleashed'], ['wii', "Pandora's Tower"],
   ].map(([platform, title]) => ({ platform, title }));
+  if (process.argv.includes('--classics')) {
+    const result = await classics(null);
+    for (const [id, list] of Object.entries(result.consoles)) console.log(id, list.length, list.slice(0, 3).map((game) => `${game.name} ${game.rating}% ${game.votes}v ${game.year}`).join(' | '));
+    process.exit(0);
+  }
   const result = await igdb(sample, null, { budget: 50 });
   if (!result) { console.log('no credentials'); process.exit(1); }
   for (const [id, game] of Object.entries(result.games)) console.log(id, JSON.stringify(game));
