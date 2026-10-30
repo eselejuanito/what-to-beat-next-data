@@ -42,7 +42,9 @@ async function query(auth, endpoint, body) {
 }
 
 const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-const FIELDS = 'fields name,alternative_names.name,first_release_date,total_rating,platforms;';
+const FIELDS = 'fields name,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
+// A rating from a handful of votes says little (100 % from 2 people): left out under this many.
+const MIN_VOTES = 5;
 
 // The IGDB game for a title: its name (or one of its other names) gives the same key, on that platform.
 // Several: the earliest one (the original rather than a later re-release with the same name).
@@ -120,10 +122,23 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
     games[id] = Object.fromEntries(Object.entries({
       id: game.id, name: game.name,
       year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
-      rating: game.total_rating ? Math.round(game.total_rating) : undefined,
+      rating: game.total_rating && game.total_rating_count >= MIN_VOTES ? Math.round(game.total_rating) : undefined,
       main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
       at: now,
     }).filter(([, value]) => value !== undefined));
+  }
+  // Ratings move: those of the games kept from the last build are read again, 500 a request.
+  const kept = Object.entries(games).filter(([id]) => !found.has(id));
+  const ratings = new Map();
+  const keptIds = [...new Set(kept.map(([, game]) => game.id))];
+  for (let i = 0; i < keptIds.length; i += 500) {
+    for (const game of await query(auth, 'games', `fields total_rating,total_rating_count; where id = (${keptIds.slice(i, i + 500).join(',')}); limit 500;`)) ratings.set(game.id, game);
+  }
+  for (const [id, game] of kept) {
+    const fresh = ratings.get(game.id);
+    if (!fresh) continue;
+    const { rating, ...rest } = game;
+    games[id] = fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? { ...rest, rating: Math.round(fresh.total_rating) } : rest;
   }
   log(`igdb: ${Object.keys(games).length} games, ${[...Object.values(games)].filter((game) => game.main || game.extra).length} with a time; ${Object.keys(misses).length} not found`);
   return { games, misses };
