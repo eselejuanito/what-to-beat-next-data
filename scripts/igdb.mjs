@@ -42,7 +42,7 @@ async function query(auth, endpoint, body) {
 }
 
 const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-const FIELDS = 'fields name,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
+const FIELDS = 'fields name,slug,cover.image_id,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
 // A rating from a handful of votes says little (100 % from 2 people): left out under this many.
 const MIN_VOTES = 5;
 
@@ -57,7 +57,7 @@ function pick(results, key, ids) {
 const hours = (seconds) => (seconds ? Math.round(seconds / 360) / 10 : undefined);
 
 // wanted: [{ platform, title }]. previous: the igdb.json published last time, or null.
-// Returns { games: { "<platform>|<key>": { id, name, year?, rating?, main?, extra?, full?, at } }, misses: { "<platform>|<key>": at } },
+// Returns { games: { "<platform>|<key>": { id, name, slug, cover?, year?, rating?, main?, extra?, full?, at } }, misses: { "<platform>|<key>": at } },
 // or null without credentials (the build then keeps the previous file).
 export async function igdb(wanted, previous, { budget = BUDGET, log = console.log } = {}) {
   const auth = await token();
@@ -120,7 +120,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   for (const [id, game] of found) {
     const time = times.get(game.id) || {};
     games[id] = Object.fromEntries(Object.entries({
-      id: game.id, name: game.name,
+      id: game.id, name: game.name, slug: game.slug, cover: game.cover ? game.cover.image_id : undefined,
       year: game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : undefined,
       rating: game.total_rating && game.total_rating_count >= MIN_VOTES ? Math.round(game.total_rating) : undefined,
       main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
@@ -132,13 +132,17 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   const ratings = new Map();
   const keptIds = [...new Set(kept.map(([, game]) => game.id))];
   for (let i = 0; i < keptIds.length; i += 500) {
-    for (const game of await query(auth, 'games', `fields total_rating,total_rating_count; where id = (${keptIds.slice(i, i + 500).join(',')}); limit 500;`)) ratings.set(game.id, game);
+    for (const game of await query(auth, 'games', `fields total_rating,total_rating_count,slug,cover.image_id; where id = (${keptIds.slice(i, i + 500).join(',')}); limit 500;`)) ratings.set(game.id, game);
   }
   for (const [id, game] of kept) {
     const fresh = ratings.get(game.id);
     if (!fresh) continue;
-    const { rating, ...rest } = game;
-    games[id] = fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? { ...rest, rating: Math.round(fresh.total_rating) } : rest;
+    // The page (slug) and cover (image id) too: kept games from before they were stored get them here.
+    const { rating, slug, cover, ...rest } = game;
+    games[id] = Object.fromEntries(Object.entries({
+      ...rest, slug: fresh.slug, cover: fresh.cover ? fresh.cover.image_id : undefined,
+      rating: fresh.total_rating && fresh.total_rating_count >= MIN_VOTES ? Math.round(fresh.total_rating) : undefined,
+    }).filter(([, value]) => value !== undefined));
   }
   log(`igdb: ${Object.keys(games).length} games, ${[...Object.values(games)].filter((game) => game.main || game.extra).length} with a time; ${Object.keys(misses).length} not found`);
   return { games, misses };
