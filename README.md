@@ -11,6 +11,9 @@ Rebuilt every day by GitHub Actions and published at **https://eselejuanito.gith
 | `igdb.json` | release year, rating and time to beat (from IGDB) of the catalog's games, for the extension's catalog page |
 | `emu/ps2.json` | PlayStation 2 games and how well PCSX2 runs them |
 | `emu/ps3.json` | PlayStation 3 games and how well RPCS3 runs them |
+| `emu/gamecube.json`, `emu/wii.json` | GameCube and Wii games and how well Dolphin runs them (from its wiki: CC BY-SA 3.0, these two files too) |
+| `emu/wiiu.json` | Wii U games and how well Cemu runs them |
+| `emu/psp.json` | PSP games and how well PPSSPP runs them |
 | `emu/ps5.json` | PlayStation 5 games and how well SharpEmu or KytyPS5 runs them (young emulators: "playable" is still rough) |
 
 Status: `verified` (playable, or an official build of the port for that system), `experimental` (in-game with problems), `probable` (systems written by hand), `no`.
@@ -30,6 +33,9 @@ Status: `verified` (playable, or an official build of the port for that system),
 | [PortMaster](https://portmaster.games/) (`ports.json` of [PortMaster-New](https://github.com/PortsMaster/PortMaster-New)'s latest release) | ports for Linux handhelds | MIT |
 | [nxnative](https://github.com/seedds/nxnative) games table | Switch games run natively on Mac, iPhone and iPad | MIT |
 | [IGDB](https://www.igdb.com/) API (Twitch credentials as repository secrets) | years, ratings, times to beat | IGDB's terms: non-commercial use, credited |
+| [Dolphin wiki](https://wiki.dolphin-emu.org/) ratings | GameCube, Wii | CC BY-SA 3.0 |
+| [Cemu compatibility list](https://compat.cemu.info/) | Wii U | no license stated: titles and ratings only, credited and linked |
+| [PPSSPP compatibility reports](https://report.ppsspp.org/games) | PSP | no license stated: titles and ratings only, credited and linked |
 | [SharpEmu compatibility reports](https://github.com/sharpemu/sharpemu-site) | PlayStation 5 | MIT |
 | [KytyPS5 compatibility list](https://kytyps5.github.io/) | PlayStation 5 | GPL-2.0 |
 | [PCSX2 GameIndex.yaml](https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml) | PlayStation 2 | GPL-3.0 |

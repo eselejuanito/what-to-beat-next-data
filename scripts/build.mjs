@@ -3,6 +3,9 @@
 //   RPCS3               PlayStation 3 compatibility list (rpcs3.net public API, one page a second)
 //   PCSX2               PlayStation 2 game database (GameIndex.yaml in the PCSX2 repository, GPL-3.0)
 //   PortMaster          ports for Linux handhelds (ports.json of PortsMaster/PortMaster-New's latest release, MIT)
+//   Dolphin wiki        GameCube and Wii ratings (wiki.dolphin-emu.org, CC BY-SA 3.0: emu/gamecube.json and emu/wii.json too)
+//   Cemu, PPSSPP        Wii U and PSP compatibility lists, read from their public pages (compat.cemu.info,
+//                       report.ppsspp.org; no license stated: only titles and ratings, credited and linked back)
 //   SharpEmu, KytyPS5   PlayStation 5 emulators' compatibility lists (sharpemu-site: MIT; kytyps5.github.io: GPL-2.0)
 //   IGDB                year, rating and time to beat of those games (igdb.mjs; needs the IGDB_* secrets)
 //   nxnative            Switch games whose own code runs natively on Apple chips (its games table, MIT)
@@ -196,6 +199,79 @@ async function pcsx2(offline) {
   return group(entries);
 }
 
+// Dolphin's wiki: each game page is in a "<n> stars (Rating)" category and in "GameCube games", "Wii games"
+// or "WiiWare games" (Virtual Console games are other consoles' and are left out).
+// 5 Perfect, 4 Playable -> verified; 3 Starts (runs with problems) -> experimental; 1-2 -> no; 0 is "not rated yet".
+export async function dolphin() {
+  const API = 'https://wiki.dolphin-emu.org/api.php?action=query&format=json';
+  const PLATFORM = { 'Category:GameCube games': 'gamecube', 'Category:Wii games': 'wii', 'Category:WiiWare games': 'wii' };
+  const STATUS = { 5: 'verified', 4: 'verified', 3: 'experimental', 2: 'no', 1: 'no' };
+  const byConsole = { gamecube: [], wii: [] };
+  for (const stars of [5, 4, 3, 2, 1]) {
+    const pages = new Map();
+    let more = '';
+    for (;;) {
+      const data = await get(`${API}&generator=categorymembers&gcmtitle=${encodeURIComponent(`Category:${stars} stars (Rating)`)}&gcmnamespace=0&gcmlimit=500&prop=categories&cllimit=max&clcategories=${encodeURIComponent(Object.keys(PLATFORM).join('|'))}${more}`);
+      for (const page of Object.values((data && data.query && data.query.pages) || {})) {
+        const known = pages.get(page.pageid) || { title: page.title, categories: [] };
+        known.categories.push(...(page.categories || []).map((category) => category.title));
+        pages.set(page.pageid, known);
+      }
+      if (!data || !data.continue) break;
+      more = Object.entries(data.continue).map(([key, value]) => `&${key}=${encodeURIComponent(value)}`).join('');
+      await sleep(1000);
+    }
+    for (const page of pages.values()) {
+      const consoleId = page.categories.map((category) => PLATFORM[category]).find(Boolean);
+      // "Super Mario Galaxy" and "Metroid Prime (GC)": the wiki's own disambiguation goes.
+      if (consoleId) byConsole[consoleId].push({ title: page.title.replace(/\s*\((GC|Wii|WiiWare|GameCube)\)$/, ''), serial: page.title, status: STATUS[stars], note: `${stars} stars` });
+    }
+    await sleep(1000);
+  }
+  return { gamecube: group(byConsole.gamecube), wii: group(byConsole.wii) };
+}
+
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', deg: '°' };
+const decode = (text) => text.replace(/&(#x?[0-9a-f]+|\w+);/gi, (match, code) => (code[0] === '#'
+  ? String.fromCodePoint(code[1].toLowerCase() === 'x' ? parseInt(code.slice(2), 16) : Number(code.slice(1)))
+  : ENTITIES[code.toLowerCase()] ?? match)).replace(/\s+/g, ' ').trim();
+
+// Cemu (compat.cemu.info: one page, a row per game): Perfect, Playable -> verified; Runs -> experimental;
+// Loads, Unplayable -> no; Unknown left out. Virtual Console games are other consoles' and are left out too.
+export async function cemu() {
+  const STATUS = { Perfect: 'verified', Playable: 'verified', Runs: 'experimental', Loads: 'no', Unplayable: 'no' };
+  const html = (await get('https://compat.cemu.info/', { json: false })) || '';
+  const entries = [];
+  for (const row of html.split(/<tr>/).slice(1)) {
+    const title = (row.match(/<td class="title">\s*<a[^>]*>([^<]+)<\/a>/) || [])[1];
+    const rating = (row.match(/<td class="rating">\s*<img[^>]*alt="([^"]+)"/) || [])[1];
+    if (!title || !STATUS[rating] || /virtual_console/.test(row)) continue;
+    entries.push({ title: decode(title), serial: decode(title), status: STATUS[rating], note: rating });
+  }
+  return group(entries);
+}
+
+// PPSSPP (report.ppsspp.org/games, 50 a page, one page every 1.5 s): Perfect, Playable -> verified;
+// Ingame -> experimental; Menu, None -> no. Homebrew rows are left out (not games of a store or a disc).
+export async function ppsspp() {
+  const STATUS = { Perfect: 'verified', Playable: 'verified', Ingame: 'experimental', Menu: 'no', None: 'no' };
+  const entries = [];
+  for (let page = 1; page <= 400; page++) {
+    const html = await get(`https://report.ppsspp.org/games?page=${page}`, { json: false });
+    const rows = (html || '').split(/<tr class="games">/).slice(1);
+    if (!rows.length) break;
+    for (const row of rows) {
+      const title = (row.match(/class="title">([^<]+)<\/a>/) || [])[1];
+      const region = (row.match(/class="region_version">([^<]*)</) || [])[1] || '';
+      const compat = (row.match(/<span class="label[^"]*">([^<]+)<\/span>/) || [])[1];
+      if (!title || /homebrew/i.test(region) || !STATUS[compat && compat.trim()]) continue;
+      entries.push({ title: decode(title), serial: `${decode(title)} ${region}`, status: STATUS[compat.trim()], note: compat.trim() });
+    }
+    await sleep(1500);
+  }
+  return group(entries);
+}
+
 // PlayStation 5: two young emulators, each game kept with the one that runs it best (its project and page).
 // SharpEmu (reports in sharpemu-site, one file per title id; names from its games.json):
 //   playable -> verified, ingame -> experimental, boots / menus / nothing -> no.
@@ -232,6 +308,9 @@ const SOURCES = [
   { id: 'rpcs3', name: 'RPCS3 compatibility list', url: 'https://rpcs3.net/compatibility', license: 'RPCS3 public API, linked back', note: 'PlayStation 3' },
   { id: 'portmaster', name: 'PortMaster', url: 'https://portmaster.games/', license: 'MIT', note: 'Linux handhelds' },
   { id: 'nxnative', name: 'nxnative', url: 'https://github.com/seedds/nxnative', license: 'MIT', note: 'Switch games on Apple chips' },
+  { id: 'dolphin', name: 'Dolphin wiki ratings', url: 'https://wiki.dolphin-emu.org/', license: 'CC BY-SA 3.0 (emu/gamecube.json, emu/wii.json)', note: 'GameCube and Wii' },
+  { id: 'cemu', name: 'Cemu compatibility list', url: 'https://compat.cemu.info/', license: 'no license stated; titles and ratings only, linked back', note: 'Wii U' },
+  { id: 'ppsspp', name: 'PPSSPP compatibility reports', url: 'https://report.ppsspp.org/games', license: 'no license stated; titles and ratings only, linked back', note: 'PSP' },
   { id: 'sharpemu', name: 'SharpEmu compatibility reports', url: 'https://github.com/sharpemu/sharpemu-site', license: 'MIT', note: 'PlayStation 5' },
   { id: 'kytyps5', name: 'KytyPS5 compatibility list', url: 'https://kytyps5.github.io/', license: 'GPL-2.0', note: 'PlayStation 5' },
   { id: 'igdb', name: 'IGDB', url: 'https://www.igdb.com/', license: 'IGDB API, non-commercial, credited', note: 'years, ratings, times to beat' },
@@ -251,6 +330,14 @@ async function main() {
   const emulators = {
     ps3: { project: 'RPCS3', url: 'https://rpcs3.net/', games: await rpcs3(offline) },
     ps2: { project: 'PCSX2', url: 'https://pcsx2.net/', games: await pcsx2(offline) },
+    ...(offline ? {} : await dolphin().then(({ gamecube, wii }) => ({
+      gamecube: { project: 'Dolphin', url: 'https://dolphin-emu.org/', games: gamecube },
+      wii: { project: 'Dolphin', url: 'https://dolphin-emu.org/', games: wii },
+    }))),
+    ...(offline ? {} : {
+      wiiu: { project: 'Cemu', url: 'https://cemu.info/', games: await cemu() },
+      psp: { project: 'PPSSPP', url: 'https://www.ppsspp.org/', games: await ppsspp() },
+    }),
     ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await ps5() } }),
   };
   for (const [platform, emulator] of Object.entries(emulators)) {
