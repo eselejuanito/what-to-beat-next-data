@@ -1,0 +1,11 @@
+{
+  "note": "Repositories the weekly search (scripts/discover.mjs) must not suggest again: looked at and left out (tools, engines without a game, work in progress with nothing to play, game files included).",
+  "repos": [
+    "N64Recomp/N64Recomp",
+    "Vector35/binaryninja-api",
+    "encounter/decomp-toolkit",
+    "encounter/objdiff",
+    "rt64/rt64",
+    "sp00nznet/ps3recomp"
+  ]
+}

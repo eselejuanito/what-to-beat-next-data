@@ -41,4 +41,4 @@ node scripts/hosts.test.mjs                 # the release-file classifier
 GITHUB_TOKEN=... node scripts/build.mjs     # writes site/ (token optional, avoids rate limits)
 ```
 
-Corrections and new ports: edit `sources/ports.json` and open a pull request.
+Corrections and new ports: edit `sources/ports.json` and open a pull request. Every Monday, `scripts/discover.mjs` lists new projects with a downloadable release in the **Port candidates** issue; each one is looked at and moved to `sources/ports.json` or `sources/ignore.json` by hand.
