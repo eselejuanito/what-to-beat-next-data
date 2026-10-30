@@ -13,7 +13,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // The catalog's platform ids (data/devices.json in the extension) -> IGDB's platform ids.
 export const PLATFORMS = {
-  pc: [6, 14, 3], ps1: [7], ps2: [8], ps3: [9], ps4: [48], psp: [38], vita: [46],
+  pc: [6, 14, 3], ps1: [7], ps2: [8], ps3: [9], ps4: [48], ps5: [167], psp: [38], vita: [46],
   xbox: [11], xbox360: [12], nes: [18], snes: [19], n64: [4], gamecube: [21], wii: [5], wiiu: [41],
   switch: [130], gb: [33], gbc: [22], gba: [24], nds: [20], '3ds': [37],
   genesis: [29], mastersystem: [64], gamegear: [35], segacd: [78], '32x': [30], saturn: [32], dreamcast: [23],

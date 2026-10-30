@@ -3,6 +3,7 @@
 //   RPCS3               PlayStation 3 compatibility list (rpcs3.net public API, one page a second)
 //   PCSX2               PlayStation 2 game database (GameIndex.yaml in the PCSX2 repository, GPL-3.0)
 //   PortMaster          ports for Linux handhelds (ports.json of PortsMaster/PortMaster-New's latest release, MIT)
+//   SharpEmu, KytyPS5   PlayStation 5 emulators' compatibility lists (sharpemu-site: MIT; kytyps5.github.io: GPL-2.0)
 //   IGDB                year, rating and time to beat of those games (igdb.mjs; needs the IGDB_* secrets)
 //   nxnative            Switch games whose own code runs natively on Apple chips (its games table, MIT)
 // Only facts and links to each project's own page; never game files. Node 20+, no dependencies.
@@ -81,7 +82,8 @@ export async function ports() {
     out.push({
       games: port.games.map((game) => ({ title: game.title, keys: [...new Set([game.title, ...(game.aliases || [])].map(matchKey))] })),
       platform: port.platform, method: port.method, project: port.project, url: port.url,
-      hosts, status: port.repo && release && hosts.length ? 'verified' : 'probable', release,
+      // "experimental" in the source: on the radar, playable but rough (AnyPS5).
+      hosts, status: port.status || (port.repo && release && hosts.length ? 'verified' : 'probable'), release,
       needs: ['game-files'],
     });
     console.log(`ports: ${port.project} ${hosts.join(' ') || '(no systems)'}`);
@@ -131,14 +133,16 @@ export async function nxnative() {
 function group(entries) {
   const byKey = new Map();
   const rank = { verified: 0, experimental: 1, no: 2 };
-  for (const { title, serial, status, note } of entries) {
+  // project / url: which emulator, when a console has more than one (PlayStation 5).
+  for (const { title, serial, status, note, project, url } of entries) {
     const key = matchKey(title);
     if (!key) continue;
     const known = byKey.get(key);
-    if (!known) byKey.set(key, { title, key, status, note, serials: [serial] });
+    const which = project ? { project, url } : {};
+    if (!known) byKey.set(key, { title, key, status, note, ...which, serials: [serial] });
     else {
       known.serials.push(serial);
-      if (rank[status] < rank[known.status]) Object.assign(known, { status, note });
+      if (rank[status] < rank[known.status]) Object.assign(known, { status, note, ...which });
     }
   }
   // Serials only counted: the extension matches by title, and the files stay small.
@@ -192,11 +196,44 @@ async function pcsx2(offline) {
   return group(entries);
 }
 
+// PlayStation 5: two young emulators, each game kept with the one that runs it best (its project and page).
+// SharpEmu (reports in sharpemu-site, one file per title id; names from its games.json):
+//   playable -> verified, ingame -> experimental, boots / menus / nothing -> no.
+// KytyPS5 (compat-index.json of its site): in-game -> experimental, the rest -> no. PS4 title ids (CUSA) are left out.
+export async function ps5() {
+  const SHARP = { project: 'SharpEmu', url: 'https://github.com/sharpemu/sharpemu' };
+  const KYTY = { project: 'KytyPS5', url: 'https://kytyps5.github.io/' };
+  const raw = 'https://raw.githubusercontent.com/';
+  const entries = [];
+  const kyty = await get(`${raw}KytyPS5/kytyps5.github.io/HEAD/src/data/compat-index.json`);
+  for (const game of kyty || []) {
+    if (!/^PPSA/.test(game.titleId || '')) continue;
+    entries.push({ title: game.title, serial: game.titleId, status: game.overall === 'in-game' ? 'experimental' : 'no', note: game.overall, ...KYTY });
+  }
+  const names = new Map();
+  for (const game of (await get(`${raw}sharpemu/sharpemu-site/HEAD/src/data/games.json`)) || []) {
+    for (const id of game.allTitleIds || [game.titleId]) names.set(id, game.name);
+  }
+  const headers = { Accept: 'application/vnd.github+json', ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) };
+  const tree = await get('https://api.github.com/repos/sharpemu/sharpemu-site/git/trees/HEAD?recursive=1', { headers });
+  const STATUS = { playable: 'verified', ingame: 'experimental' };
+  for (const { path } of (tree && tree.tree) || []) {
+    const id = (path.match(/^src\/content\/compat\/[^/]+\/(PPSA\d+)\.md$/) || [])[1];
+    if (!id || !names.has(id)) continue;
+    const status = ((await get(`${raw}sharpemu/sharpemu-site/HEAD/${path}`, { json: false })) || '').match(/^status:\s*"?([a-z-]+)/m);
+    if (status) entries.push({ title: names.get(id), serial: id, status: STATUS[status[1]] || 'no', note: status[1], ...SHARP });
+    await sleep(100);
+  }
+  return group(entries);
+}
+
 const SOURCES = [
   { id: 'ports', name: 'Curated ports list', url: 'https://github.com/eselejuanito/what-to-beat-next-data/blob/main/sources/ports.json', license: 'GPL-3.0', note: 'systems from each project\'s latest GitHub release' },
   { id: 'rpcs3', name: 'RPCS3 compatibility list', url: 'https://rpcs3.net/compatibility', license: 'RPCS3 public API, linked back', note: 'PlayStation 3' },
   { id: 'portmaster', name: 'PortMaster', url: 'https://portmaster.games/', license: 'MIT', note: 'Linux handhelds' },
   { id: 'nxnative', name: 'nxnative', url: 'https://github.com/seedds/nxnative', license: 'MIT', note: 'Switch games on Apple chips' },
+  { id: 'sharpemu', name: 'SharpEmu compatibility reports', url: 'https://github.com/sharpemu/sharpemu-site', license: 'MIT', note: 'PlayStation 5' },
+  { id: 'kytyps5', name: 'KytyPS5 compatibility list', url: 'https://kytyps5.github.io/', license: 'GPL-2.0', note: 'PlayStation 5' },
   { id: 'igdb', name: 'IGDB', url: 'https://www.igdb.com/', license: 'IGDB API, non-commercial, credited', note: 'years, ratings, times to beat' },
   { id: 'pcsx2', name: 'PCSX2 game database', url: 'https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml', license: 'GPL-3.0', note: 'PlayStation 2' },
 ];
@@ -214,6 +251,7 @@ async function main() {
   const emulators = {
     ps3: { project: 'RPCS3', url: 'https://rpcs3.net/', games: await rpcs3(offline) },
     ps2: { project: 'PCSX2', url: 'https://pcsx2.net/', games: await pcsx2(offline) },
+    ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await ps5() } }),
   };
   for (const [platform, emulator] of Object.entries(emulators)) {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });

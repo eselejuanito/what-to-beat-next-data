@@ -779,6 +779,38 @@
       "project": "Shockolate",
       "url": "https://github.com/Interrupt/systemshock",
       "repo": "Interrupt/systemshock"
+    },
+    {
+      "games": [
+        {
+          "title": "Astro Bot"
+        },
+        {
+          "title": "Minecraft",
+          "aliases": [
+            "Minecraft Bedrock"
+          ]
+        },
+        {
+          "title": "Pac-Man World Re-Pac"
+        },
+        {
+          "title": "Silt"
+        },
+        {
+          "title": "Star Wars: Dark Forces Remaster"
+        },
+        {
+          "title": "Dead Cells"
+        }
+      ],
+      "platform": "ps5",
+      "method": "native_layer",
+      "project": "AnyPS5",
+      "url": "https://github.com/boykopovar/AnyPS5",
+      "repo": "boykopovar/AnyPS5",
+      "status": "experimental",
+      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30)."
     }
   ]
 }
