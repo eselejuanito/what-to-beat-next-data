@@ -3,11 +3,13 @@
 //   RPCS3               PlayStation 3 compatibility list (rpcs3.net public API, one page a second)
 //   PCSX2               PlayStation 2 game database (GameIndex.yaml in the PCSX2 repository, GPL-3.0)
 //   PortMaster          ports for Linux handhelds (ports.json of PortsMaster/PortMaster-New's latest release, MIT)
+//   IGDB                year, rating and time to beat of those games (igdb.mjs; needs the IGDB_* secrets)
 //   nxnative            Switch games whose own code runs natively on Apple chips (its games table, MIT)
 // Only facts and links to each project's own page; never game files. Node 20+, no dependencies.
 // Usage: node scripts/build.mjs [--offline <dir with rpcs3/*.json and GameIndex.yaml>]   (GITHUB_TOKEN optional)
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { igdb } from './igdb.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'site');
@@ -195,6 +197,7 @@ const SOURCES = [
   { id: 'rpcs3', name: 'RPCS3 compatibility list', url: 'https://rpcs3.net/compatibility', license: 'RPCS3 public API, linked back', note: 'PlayStation 3' },
   { id: 'portmaster', name: 'PortMaster', url: 'https://portmaster.games/', license: 'MIT', note: 'Linux handhelds' },
   { id: 'nxnative', name: 'nxnative', url: 'https://github.com/seedds/nxnative', license: 'MIT', note: 'Switch games on Apple chips' },
+  { id: 'igdb', name: 'IGDB', url: 'https://www.igdb.com/', license: 'IGDB API, non-commercial, credited', note: 'years, ratings, times to beat' },
   { id: 'pcsx2', name: 'PCSX2 game database', url: 'https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml', license: 'GPL-3.0', note: 'PlayStation 2' },
 ];
 
@@ -216,10 +219,22 @@ async function main() {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });
     console.log(`emu/${platform}: ${emulator.games.length} games`);
   }
+  // IGDB: every game of the catalog, asking only for the new ones (the rest come from the last published file).
+  const BASE = 'https://eselejuanito.github.io/what-to-beat-next-data/';
+  const previous = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
+  const wanted = [
+    ...portList.flatMap((port) => port.games.map((game) => ({ platform: port.platform, title: game.title }))),
+    ...Object.entries(emulators).flatMap(([platform, emulator]) => emulator.games.filter((game) => game.status !== 'no').map((game) => ({ platform, title: game.title }))),
+  ];
+  const times = offline ? null : await igdb(wanted, previous);
+  const igdbFile = times ? { generated, ...times } : previous;
+  if (igdbFile) await write('igdb.json', igdbFile);
+
   await write('index.json', {
     version: 1, generated, sources: SOURCES,
     files: {
       ports: { path: 'ports.json', count: portList.length },
+      ...(igdbFile ? { igdb: { path: 'igdb.json', count: Object.keys(igdbFile.games).length, generated: igdbFile.generated } } : {}),
       emu: Object.fromEntries(Object.entries(emulators).map(([platform, emulator]) => [platform, { path: `emu/${platform}.json`, count: emulator.games.length, project: emulator.project, url: emulator.url }])),
     },
   });

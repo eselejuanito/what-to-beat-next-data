@@ -25,6 +25,8 @@ jobs:
       - run: node scripts/build.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGDB_CLIENT_ID: ${{ secrets.IGDB_CLIENT_ID }}
+          IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
