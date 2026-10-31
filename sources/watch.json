@@ -85,8 +85,13 @@
     },
     {
       "name": "Switch emulators (Eden, Citron) compatibility",
-      "url": "https://github.com/search?q=switch+emulator+compatibility&type=repositories",
-      "what": "Switch, in progress: candidate source"
+      "url": "https://eden-emu.dev/",
+      "what": "Switch, in progress: candidate source (official site and git.eden-emu.dev only)"
+    },
+    {
+      "name": "Switch 2 emulators: Eden NX2 (fork on git.eden-emu.dev/Takoroka/eden-nx2), Pound (github.com/pound-emu/pound), oboromi, Eglantine",
+      "url": "https://git.eden-emu.dev/Takoroka/eden-nx2",
+      "what": "Switch 2, very early (no compatibility list yet, Windows builds only): add 'switch2' as a console once one publishes which games run. Never link third-party download sites (glitchmod.com and the like); several fake 'Switch 2 emulator' downloads circulate"
     },
     {
       "name": "New native layers like nxnative or AnyPS5",
