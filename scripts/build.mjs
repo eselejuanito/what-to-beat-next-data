@@ -4,6 +4,8 @@
 //   PCSX2               PlayStation 2 game database (GameIndex.yaml in the PCSX2 repository, GPL-3.0)
 //   PortMaster          ports for Linux handhelds (ports.json of PortsMaster/PortMaster-New's latest release, MIT)
 //   Dolphin wiki        GameCube and Wii ratings (wiki.dolphin-emu.org, CC BY-SA 3.0: emu/gamecube.json and emu/wii.json too)
+//   shadPS4             PlayStation 4 reports (issues of shadps4-compatibility/shadps4-game-compatibility, status
+//                       labels; no license stated: titles and statuses only, credited and linked back)
 //   Cemu, PPSSPP        Wii U and PSP compatibility lists, read from their public pages (compat.cemu.info,
 //                       report.ppsspp.org; no license stated: only titles and ratings, credited and linked back)
 //   SharpEmu, KytyPS5   PlayStation 5 emulators' compatibility lists (sharpemu-site: MIT; kytyps5.github.io: GPL-2.0)
@@ -272,6 +274,26 @@ export async function ppsspp() {
   return group(entries);
 }
 
+// shadPS4: one issue per game and system ("CUSA03507 - Bully"), its status as a label:
+// status-playable -> verified; status-ingame -> experimental; menus, boots, nothing -> no.
+export async function shadps4() {
+  const STATUS = { 'status-playable': 'verified', 'status-ingame': 'experimental', 'status-menus': 'no', 'status-boots': 'no', 'status-nothing': 'no' };
+  const headers = { Accept: 'application/vnd.github+json', ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) };
+  const entries = [];
+  for (let page = 1; page <= 100; page++) {
+    const issues = await get(`https://api.github.com/repos/shadps4-compatibility/shadps4-game-compatibility/issues?state=all&per_page=100&page=${page}`, { headers });
+    if (!issues || !issues.length) break;
+    for (const issue of issues) {
+      if (issue.pull_request) continue;
+      const [, serial, title] = issue.title.match(/^(\w{4}\d{5})\s*-\s*(.+)$/) || [];
+      const label = issue.labels.map((item) => item.name).find((name) => STATUS[name]);
+      if (title && label) entries.push({ title: title.replace(/[™®]/g, ''), serial, status: STATUS[label], note: label.slice(7) });
+    }
+    await sleep(500);
+  }
+  return group(entries);
+}
+
 // PlayStation 5: two young emulators, each game kept with the one that runs it best (its project and page).
 // SharpEmu (reports in sharpemu-site, one file per title id; names from its games.json):
 //   playable -> verified, ingame -> experimental, boots / menus / nothing -> no.
@@ -311,6 +333,7 @@ const SOURCES = [
   { id: 'dolphin', name: 'Dolphin wiki ratings', url: 'https://wiki.dolphin-emu.org/', license: 'CC BY-SA 3.0 (emu/gamecube.json, emu/wii.json)', note: 'GameCube and Wii' },
   { id: 'cemu', name: 'Cemu compatibility list', url: 'https://compat.cemu.info/', license: 'no license stated; titles and ratings only, linked back', note: 'Wii U' },
   { id: 'ppsspp', name: 'PPSSPP compatibility reports', url: 'https://report.ppsspp.org/games', license: 'no license stated; titles and ratings only, linked back', note: 'PSP' },
+  { id: 'shadps4', name: 'shadPS4 compatibility reports', url: 'https://github.com/shadps4-compatibility/shadps4-game-compatibility', license: 'no license stated; titles and statuses only, linked back', note: 'PlayStation 4' },
   { id: 'sharpemu', name: 'SharpEmu compatibility reports', url: 'https://github.com/sharpemu/sharpemu-site', license: 'MIT', note: 'PlayStation 5' },
   { id: 'kytyps5', name: 'KytyPS5 compatibility list', url: 'https://kytyps5.github.io/', license: 'GPL-2.0', note: 'PlayStation 5' },
   { id: 'igdb', name: 'IGDB', url: 'https://www.igdb.com/', license: 'IGDB API, non-commercial, credited', note: 'years, ratings, times to beat' },
@@ -337,6 +360,7 @@ async function main() {
     ...(offline ? {} : {
       wiiu: { project: 'Cemu', url: 'https://cemu.info/', games: await cemu() },
       psp: { project: 'PPSSPP', url: 'https://www.ppsspp.org/', games: await ppsspp() },
+      ps4: { project: 'shadPS4', url: 'https://shadps4.net/', games: await shadps4() },
     }),
     ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await ps5() } }),
   };

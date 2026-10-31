@@ -1,32 +1,117 @@
 {
   "note": "Where new games come from, and how often each place is looked at. scripts/discover.mjs copies the weekly manual checks into the Port candidates issue every Monday.",
   "daily": [
-    { "name": "Curated ports: each project's latest GitHub release", "what": "systems each port runs on" },
-    { "name": "PortMaster", "url": "https://portmaster.games/", "what": "Linux handhelds" },
-    { "name": "nxnative", "url": "https://github.com/seedds/nxnative", "what": "Switch games on Apple chips" },
-    { "name": "PCSX2 GameIndex", "url": "https://github.com/PCSX2/pcsx2", "what": "PS2" },
-    { "name": "RPCS3", "url": "https://rpcs3.net/compatibility", "what": "PS3" },
-    { "name": "Dolphin wiki", "url": "https://wiki.dolphin-emu.org/", "what": "GameCube, Wii" },
-    { "name": "Cemu", "url": "https://compat.cemu.info/", "what": "Wii U" },
-    { "name": "PPSSPP", "url": "https://report.ppsspp.org/games", "what": "PSP" },
-    { "name": "SharpEmu, KytyPS5", "url": "https://github.com/sharpemu/sharpemu-site", "what": "PS5" },
-    { "name": "IGDB", "url": "https://www.igdb.com/", "what": "years, ratings, times" }
+    {
+      "name": "Curated ports: each project's latest GitHub release",
+      "what": "systems each port runs on"
+    },
+    {
+      "name": "PortMaster",
+      "url": "https://portmaster.games/",
+      "what": "Linux handhelds"
+    },
+    {
+      "name": "nxnative",
+      "url": "https://github.com/seedds/nxnative",
+      "what": "Switch games on Apple chips"
+    },
+    {
+      "name": "PCSX2 GameIndex",
+      "url": "https://github.com/PCSX2/pcsx2",
+      "what": "PS2"
+    },
+    {
+      "name": "RPCS3",
+      "url": "https://rpcs3.net/compatibility",
+      "what": "PS3"
+    },
+    {
+      "name": "Dolphin wiki",
+      "url": "https://wiki.dolphin-emu.org/",
+      "what": "GameCube, Wii"
+    },
+    {
+      "name": "Cemu",
+      "url": "https://compat.cemu.info/",
+      "what": "Wii U"
+    },
+    {
+      "name": "PPSSPP",
+      "url": "https://report.ppsspp.org/games",
+      "what": "PSP"
+    },
+    {
+      "name": "SharpEmu, KytyPS5",
+      "url": "https://github.com/sharpemu/sharpemu-site",
+      "what": "PS5"
+    },
+    {
+      "name": "shadPS4",
+      "url": "https://github.com/shadps4-compatibility/shadps4-game-compatibility",
+      "what": "PS4"
+    },
+    {
+      "name": "IGDB",
+      "url": "https://www.igdb.com/",
+      "what": "years, ratings, times"
+    }
   ],
   "weekly": [
-    { "name": "GitHub search (automatic)", "what": "new ports, recompilations and native layers with a release: the table above" },
-    { "name": "AnyPS5 Game bring-up", "url": "https://github.com/boykopovar/AnyPS5/discussions/categories/game-bring-up", "what": "PS5 games reported playable: add them to AnyPS5 in sources/ports.json" },
-    { "name": "SharpEmu and KytyPS5 news", "url": "https://github.com/sharpemu/sharpemu/releases", "what": "PS5: read daily already; look for a big jump in playable games" }
+    {
+      "name": "GitHub search (automatic)",
+      "what": "new ports, recompilations and native layers with a release: the table above"
+    },
+    {
+      "name": "AnyPS5 Game bring-up",
+      "url": "https://github.com/boykopovar/AnyPS5/discussions/categories/game-bring-up",
+      "what": "PS5 games reported playable: add them to AnyPS5 in sources/ports.json"
+    },
+    {
+      "name": "SharpEmu and KytyPS5 news",
+      "url": "https://github.com/sharpemu/sharpemu/releases",
+      "what": "PS5: read daily already; look for a big jump in playable games"
+    }
   ],
   "monthly": [
-    { "name": "shadPS4 compatibility", "url": "https://github.com/shadps4-compatibility/shadps4-game-compatibility", "what": "PS4, 415 playable: not connected (no license); connect if the owner agrees" },
-    { "name": "Xenia compatibility", "url": "https://github.com/xenia-project/game-compatibility/issues", "what": "Xbox 360, in progress: candidate source" },
-    { "name": "xemu titles", "url": "https://xemu.app/titles/", "what": "original Xbox, in progress: candidate source" },
-    { "name": "Switch emulators (Eden, Citron) compatibility", "url": "https://github.com/search?q=switch+emulator+compatibility&type=repositories", "what": "Switch, in progress: candidate source" },
-    { "name": "New native layers like nxnative or AnyPS5", "url": "https://github.com/search?q=native+layer+games&type=repositories&s=updated", "what": "a layer with its own game list becomes a source" },
-    { "name": "awesome-game-decompilations", "url": "https://github.com/CharlotteCross1998/awesome-game-decompilations", "what": "decompilations that start shipping releases" }
+    {
+      "name": "Xenia compatibility",
+      "url": "https://github.com/xenia-project/game-compatibility/issues",
+      "what": "Xbox 360, in progress: candidate source"
+    },
+    {
+      "name": "xemu titles",
+      "url": "https://xemu.app/titles/",
+      "what": "original Xbox, in progress: candidate source"
+    },
+    {
+      "name": "Switch emulators (Eden, Citron) compatibility",
+      "url": "https://github.com/search?q=switch+emulator+compatibility&type=repositories",
+      "what": "Switch, in progress: candidate source"
+    },
+    {
+      "name": "New native layers like nxnative or AnyPS5",
+      "url": "https://github.com/search?q=native+layer+games&type=repositories&s=updated",
+      "what": "a layer with its own game list becomes a source"
+    },
+    {
+      "name": "awesome-game-decompilations",
+      "url": "https://github.com/CharlotteCross1998/awesome-game-decompilations",
+      "what": "decompilations that start shipping releases"
+    }
   ],
   "done": {
     "note": "Emulation that runs nearly everything on any device that can run it: no per-game list needed, the device's ceiling (data/devices.json in the extension) is enough.",
-    "consoles": ["NES", "SNES", "Game Boy, Game Boy Color, Game Boy Advance", "Mega Drive/Genesis, Master System, Game Gear, Sega CD, 32X", "TurboGrafx-16 / PC Engine", "Neo Geo", "PlayStation (PS1)", "Nintendo 64", "Nintendo DS", "Saturn, Dreamcast"]
+    "consoles": [
+      "NES",
+      "SNES",
+      "Game Boy, Game Boy Color, Game Boy Advance",
+      "Mega Drive/Genesis, Master System, Game Gear, Sega CD, 32X",
+      "TurboGrafx-16 / PC Engine",
+      "Neo Geo",
+      "PlayStation (PS1)",
+      "Nintendo 64",
+      "Nintendo DS",
+      "Saturn, Dreamcast"
+    ]
   }
 }
