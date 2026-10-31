@@ -4,6 +4,8 @@ import { hostsOf, matchKey } from './build.mjs';
 
 const cases = {
   'OpenMW-0.51.0-macOS-arm64.dmg': ['macos-arm64'],
+  'devilutionx-iOS.ipa': ['ios-arm64'],
+  'Starship-ios-arm64.zip': ['ios-arm64'],
   'OpenMW-0.51.0-macOS-x86_64.dmg': ['macos-x64'],
   'openmw-0.51.0-Linux-64Bit.tar.gz': ['linux-x64'],
   'openmw-0.51.0-Linux-64Bit-debug.tar.gz': [],

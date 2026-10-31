@@ -48,6 +48,7 @@ export function hostsOf(name) {
   const x64 = /(x86[_-]64|x64|amd64|win64|64-?bit)/.test(file);
   const universal = /universal/.test(file);
   if (/(\.apk$|android)/.test(file)) return [/(x86_64|x64)/.test(file) ? 'android-x64' : 'android-arm64'];
+  if (/(\.ipa$|[-_.]ios[-_.])/.test(file)) return ['ios-arm64'];
   if (/(mac|osx|darwin|\.dmg$)/.test(file)) {
     if (/(ppc|tiger|10\.4)/.test(file)) return [];
     if (universal || (!arm && !x64 && !/intel|x86/.test(file))) return ['macos-arm64', 'macos-x64'];
