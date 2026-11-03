@@ -29,7 +29,11 @@ export function matchKey(title) {
 
 async function get(url, { json = true, headers = {} } = {}) {
   for (let attempt = 1; ; attempt++) {
-    const response = await fetch(url, { headers: { 'User-Agent': AGENT, ...headers } });
+    // A dropped connection is tried again like a server error.
+    const response = await fetch(url, { headers: { 'User-Agent': AGENT, ...headers } }).catch((error) => {
+      if (attempt === 3) throw error;
+      return { ok: false, status: error.cause ? error.cause.code : 'network' };
+    });
     if (response.ok) return json ? response.json() : response.text();
     if (response.status === 404) return null;
     if (attempt === 3) throw new Error(`${url}: ${response.status}`);
@@ -347,30 +351,44 @@ async function main() {
   await mkdir(join(OUT, 'emu'), { recursive: true });
   const write = (name, data) => writeFile(join(OUT, name), JSON.stringify(data));
   const generated = new Date().toISOString();
+  const BASE = 'https://eselejuanito.github.io/what-to-beat-next-data/';
 
   const curated = await ports();
   const portList = [...curated, ...await portmaster(curated), ...await nxnative()];
   await write('ports.json', { generated, ports: portList });
+  // One site down keeps that console's last published list instead of stopping the whole build.
+  const orPublished = async (platforms, build) => {
+    try { return await build(); } catch (error) {
+      console.log(`::warning::${platforms.join(', ')}: ${error.message}; keeping the published list`);
+      const kept = {};
+      for (const platform of platforms) {
+        const file = await get(`${BASE}emu/${platform}.json`).catch(() => null);
+        if (!file) throw error;
+        kept[platform] = file.games;
+      }
+      return kept;
+    }
+  };
+  const list = (platform, build) => orPublished([platform], async () => ({ [platform]: await build() })).then((kept) => kept[platform]);
   const emulators = {
-    ps3: { project: 'RPCS3', url: 'https://rpcs3.net/', games: await rpcs3(offline) },
-    ps2: { project: 'PCSX2', url: 'https://pcsx2.net/', games: await pcsx2(offline) },
-    ...(offline ? {} : await dolphin().then(({ gamecube, wii }) => ({
+    ps3: { project: 'RPCS3', url: 'https://rpcs3.net/', games: await (offline ? rpcs3(offline) : list('ps3', () => rpcs3())) },
+    ps2: { project: 'PCSX2', url: 'https://pcsx2.net/', games: await (offline ? pcsx2(offline) : list('ps2', () => pcsx2())) },
+    ...(offline ? {} : await orPublished(['gamecube', 'wii'], dolphin).then(({ gamecube, wii }) => ({
       gamecube: { project: 'Dolphin', url: 'https://dolphin-emu.org/', games: gamecube },
       wii: { project: 'Dolphin', url: 'https://dolphin-emu.org/', games: wii },
     }))),
     ...(offline ? {} : {
-      wiiu: { project: 'Cemu', url: 'https://cemu.info/', games: await cemu() },
-      psp: { project: 'PPSSPP', url: 'https://www.ppsspp.org/', games: await ppsspp() },
-      ps4: { project: 'shadPS4', url: 'https://shadps4.net/', games: await shadps4() },
+      wiiu: { project: 'Cemu', url: 'https://cemu.info/', games: await list('wiiu', cemu) },
+      psp: { project: 'PPSSPP', url: 'https://www.ppsspp.org/', games: await list('psp', ppsspp) },
+      ps4: { project: 'shadPS4', url: 'https://shadps4.net/', games: await list('ps4', shadps4) },
     }),
-    ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await ps5() } }),
+    ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await list('ps5', ps5) } }),
   };
   for (const [platform, emulator] of Object.entries(emulators)) {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });
     console.log(`emu/${platform}: ${emulator.games.length} games`);
   }
   // IGDB: every game of the catalog, asking only for the new ones (the rest come from the last published file).
-  const BASE = 'https://eselejuanito.github.io/what-to-beat-next-data/';
   const previous = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
   const wanted = [
     ...portList.flatMap((port) => port.games.map((game) => ({ platform: port.platform, title: game.title }))),
