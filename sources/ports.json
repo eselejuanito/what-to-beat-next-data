@@ -835,6 +835,49 @@
         },
         {
           "title": "Hello Neighbor"
+        },
+        {
+          "title": "Return to Monkey Island"
+        },
+        {
+          "title": "My Little Puppy"
+        },
+        {
+          "title": "Palworld"
+        },
+        {
+          "title": "Coffee Talk Episode 2: Hibiscus & Butterfly"
+        },
+        {
+          "title": "Poppy Playtime: Chapter 1"
+        },
+        {
+          "title": "Hoa"
+        },
+        {
+          "title": "Saga of Sins"
+        },
+        {
+          "title": "Up",
+          "aliases": [
+            "Disney•Pixar Up",
+            "Disney Pixar Up"
+          ]
+        },
+        {
+          "title": "Ikai"
+        },
+        {
+          "title": "Mortal Kombat 11"
+        },
+        {
+          "title": "Crimson Spires"
+        },
+        {
+          "title": "Ghost Song"
+        },
+        {
+          "title": "Dead of Darkness"
         }
       ],
       "platform": "ps5",
@@ -843,7 +886,7 @@
       "url": "https://github.com/boykopovar/AnyPS5",
       "repo": "boykopovar/AnyPS5",
       "status": "experimental",
-      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02)."
+      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02, 2026-11-09)."
     },
     {
       "games": [
@@ -1316,9 +1359,9 @@
       ],
       "platform": "wii",
       "method": "recomp",
-      "project": "NSMB-Wii-Multiplayer-Recompilation",
-      "url": "https://github.com/WitherBlitz/NSMB-Wii-Multiplayer-Recompilation",
-      "repo": "WitherBlitz/NSMB-Wii-Multiplayer-Recompilation"
+      "project": "NSMB-Wii-Recompilation",
+      "url": "https://github.com/WitherBlitz/NSMB-Wii-Recompilation",
+      "repo": "WitherBlitz/NSMB-Wii-Recompilation"
     },
     {
       "games": [
@@ -2423,6 +2466,258 @@
       "project": "sunpad",
       "url": "https://github.com/chrissotraidis/sunpad",
       "repo": "chrissotraidis/sunpad",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Bayonetta 3"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "url": "https://github.com/Zexyen/Witch-Time",
+      "repo": "Zexyen/Witch-Time",
+      "project": "Witch-Time"
+    },
+    {
+      "games": [
+        {
+          "title": "Fallout: New Vegas"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "url": "https://github.com/slaterain/nv-rs",
+      "repo": "slaterain/nv-rs",
+      "project": "nv-rs"
+    },
+    {
+      "games": [
+        {
+          "title": "Ninja Gaiden II"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "url": "https://github.com/gamboozino/ng2recomp",
+      "repo": "gamboozino/ng2recomp",
+      "project": "ng2recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Conker: Live & Reloaded"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "url": "https://github.com/Mabec-games/Conker-Recomped-and-Reloaded",
+      "repo": "Mabec-games/Conker-Recomped-and-Reloaded",
+      "project": "Conker-Recomped-and-Reloaded"
+    },
+    {
+      "games": [
+        {
+          "title": "Ratchet & Clank Future: Tools of Destruction",
+          "aliases": [
+            "Ratchet & Clank: Tools of Destruction"
+          ]
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "url": "https://github.com/Re-TeRo17/ratchet-tod-recomp",
+      "repo": "Re-TeRo17/ratchet-tod-recomp",
+      "project": "ratchet-tod-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Pokémon Black Version",
+          "aliases": [
+            "Pokémon Black",
+            "Pokémon Black and White"
+          ]
+        },
+        {
+          "title": "Pokémon White Version",
+          "aliases": [
+            "Pokémon White"
+          ]
+        }
+      ],
+      "platform": "nds",
+      "method": "fan_port",
+      "url": "https://github.com/Project-Holon/eidos",
+      "repo": "Project-Holon/eidos",
+      "project": "eidos"
+    },
+    {
+      "games": [
+        {
+          "title": "The House of the Dead"
+        }
+      ],
+      "platform": "arcade",
+      "method": "fan_port",
+      "url": "https://github.com/TawhidI-602/The-House-of-the-Dead-ReWrithe",
+      "repo": "TawhidI-602/The-House-of-the-Dead-ReWrithe",
+      "project": "The-House-of-the-Dead-ReWrithe"
+    },
+    {
+      "games": [
+        {
+          "title": "Pokémon Colosseum"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "fan_port",
+      "url": "https://github.com/chasem-dev/colosseum-launcher",
+      "repo": "chasem-dev/colosseum-launcher",
+      "project": "colosseum-launcher"
+    },
+    {
+      "games": [
+        {
+          "title": "Project Gotham Racing"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "url": "https://github.com/hk21x/pgr1-recomp",
+      "repo": "hk21x/pgr1-recomp",
+      "project": "pgr1-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Midtown Madness 3"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "url": "https://github.com/lakshya16157/midtown-madness-3-PC-Native",
+      "repo": "lakshya16157/midtown-madness-3-PC-Native",
+      "project": "midtown-madness-3-PC-Native"
+    },
+    {
+      "games": [
+        {
+          "title": "Dead or Alive 3"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "url": "https://github.com/NoRain211/doa3-re",
+      "repo": "NoRain211/doa3-re",
+      "project": "doa3-re"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: Breath of the Wild"
+        }
+      ],
+      "platform": "wiiu",
+      "method": "recomp",
+      "url": "https://github.com/ryderclanky/BotW-Native",
+      "repo": "ryderclanky/BotW-Native",
+      "project": "BotW-Native",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Xenoblade Chronicles X: Definitive Edition"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "url": "https://github.com/jmars125/xcx-recomp",
+      "repo": "jmars125/xcx-recomp",
+      "project": "xcx-recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Xenoblade Chronicles 2"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "url": "https://github.com/AksharDP/xc2-recomp",
+      "repo": "AksharDP/xc2-recomp",
+      "project": "xc2-recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "The Elder Scrolls V: Skyrim",
+          "aliases": [
+            "Skyrim"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "recomp",
+      "url": "https://github.com/ttom795/Skyrim_Android",
+      "repo": "ttom795/Skyrim_Android",
+      "project": "Skyrim_Android",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Black"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "url": "https://github.com/portingpete/Black-2006-Recomp",
+      "repo": "portingpete/Black-2006-Recomp",
+      "project": "Black-2006-Recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Monster Hunter Generations Ultimate"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "url": "https://github.com/khorne-hub/gu-native",
+      "repo": "khorne-hub/gu-native",
+      "project": "gu-native",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Tomodachi Life: Living the Dream"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "url": "https://github.com/RussoPhone/tomodachi-ltd-recomp",
+      "repo": "RussoPhone/tomodachi-ltd-recomp",
+      "project": "tomodachi-ltd-recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Donkey Kong Country"
+        }
+      ],
+      "platform": "snes",
+      "method": "recomp",
+      "url": "https://github.com/elliotttate/DKC1Recomp",
+      "repo": "elliotttate/DKC1Recomp",
+      "project": "DKC1Recomp",
       "status": "experimental"
     }
   ]
