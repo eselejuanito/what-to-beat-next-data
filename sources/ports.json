@@ -878,6 +878,67 @@
         },
         {
           "title": "Dead of Darkness"
+        },
+        {
+          "title": "AEW: Fight Forever"
+        },
+        {
+          "title": "The Witcher 3: Wild Hunt",
+          "aliases": [
+            "The Witcher 3: Wild Hunt - Complete Edition"
+          ]
+        },
+        {
+          "title": "Dispatch"
+        },
+        {
+          "title": "Prince of Persia: The Lost Crown"
+        },
+        {
+          "title": "Cult of the Lamb"
+        },
+        {
+          "title": "Achilles: Legends Untold"
+        },
+        {
+          "title": "In Rays of the Light"
+        },
+        {
+          "title": "Overcooked! All You Can Eat"
+        },
+        {
+          "title": "Suika Game"
+        },
+        {
+          "title": "Commandos: Origins"
+        },
+        {
+          "title": "Syberia: Remastered",
+          "aliases": [
+            "Syberia - Remastered",
+            "Syberia Remastered"
+          ]
+        },
+        {
+          "title": "Instant Sports Plus"
+        },
+        {
+          "title": "Brothers: A Tale of Two Sons Remake",
+          "aliases": [
+            "Brothers: A Tale of Two Sons - Remake"
+          ]
+        },
+        {
+          "title": "Kaku: Ancient Seal",
+          "aliases": [
+            "Kaku Ancient Seal"
+          ]
+        },
+        {
+          "title": "Golfing Over It with Alva Majo"
+        },
+        {
+          "title": "Marvel's Spider-Man Remastered"
         }
       ],
       "platform": "ps5",
@@ -886,7 +947,7 @@
       "url": "https://github.com/boykopovar/AnyPS5",
       "repo": "boykopovar/AnyPS5",
       "status": "experimental",
-      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02, 2026-11-09)."
+      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02, 2026-11-09, 2026-11-16)."
     },
     {
       "games": [
@@ -2718,6 +2779,238 @@
       "url": "https://github.com/elliotttate/DKC1Recomp",
       "repo": "elliotttate/DKC1Recomp",
       "project": "DKC1Recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Sonic the Hedgehog (2006)",
+          "aliases": [
+            "Sonic the Hedgehog",
+            "Sonic '06",
+            "Sonic 06"
+          ]
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "Marathon Recompiled",
+      "url": "https://github.com/sonicnext-dev/MarathonRecomp",
+      "repo": "sonicnext-dev/MarathonRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Shadow the Hedgehog"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "Shadow Recompiled",
+      "url": "https://github.com/FoxWorkshop/ShadowRecomp",
+      "repo": "FoxWorkshop/ShadowRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Mario Odyssey"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "Super Odyssey PC Recomp",
+      "url": "https://github.com/Simon3Sarkis/super-odyssey-pc-recomp",
+      "repo": "Simon3Sarkis/super-odyssey-pc-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Super Mario Odyssey"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "OdysseyRecomp",
+      "url": "https://github.com/rwwo8/OdysseyRecomp",
+      "repo": "rwwo8/OdysseyRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "inFAMOUS 2",
+          "aliases": [
+            "Infamous 2"
+          ]
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "infamous2-port",
+      "url": "https://github.com/SamiEnazi/infamous2-port",
+      "repo": "SamiEnazi/infamous2-port"
+    },
+    {
+      "games": [
+        {
+          "title": "God of War: Ascension"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "GoW-Ascension-Recomp",
+      "url": "https://github.com/bc160201983/GoW-Ascension-Recomp",
+      "repo": "bc160201983/GoW-Ascension-Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Gravity Rush Remastered"
+        },
+        {
+          "title": "Gravity Rush 2"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "GRport",
+      "url": "https://github.com/qnfn/GRport",
+      "repo": "qnfn/GRport"
+    },
+    {
+      "games": [
+        {
+          "title": "Gravity Rush 2"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "GR2port",
+      "url": "https://github.com/junminlee2004/GR2port",
+      "repo": "junminlee2004/GR2port"
+    },
+    {
+      "games": [
+        {
+          "title": "Monster Hunter 4 Ultimate"
+        }
+      ],
+      "platform": "3ds",
+      "method": "recomp",
+      "project": "4u-native",
+      "url": "https://github.com/khorne-hub/4u-native",
+      "repo": "khorne-hub/4u-native"
+    },
+    {
+      "games": [
+        {
+          "title": "Cyberpunk 2077"
+        }
+      ],
+      "platform": "pc",
+      "method": "native_layer",
+      "project": "CyPort",
+      "url": "https://github.com/Thijs2004/CyPort",
+      "repo": "Thijs2004/CyPort"
+    },
+    {
+      "games": [
+        {
+          "title": "Starlancer",
+          "aliases": [
+            "StarLancer"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "OpenReliant",
+      "url": "https://github.com/OpenReliant/openreliant",
+      "repo": "OpenReliant/openreliant"
+    },
+    {
+      "games": [
+        {
+          "title": "Far Cry Instincts"
+        }
+      ],
+      "platform": "xbox",
+      "method": "recomp",
+      "project": "Far Cry Instincts Recomp",
+      "url": "https://github.com/bassobr/Far-Cry-Instincts-Recomp",
+      "repo": "bassobr/Far-Cry-Instincts-Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "The Terminator: SkyNET",
+          "aliases": [
+            "SkyNET",
+            "Terminator: SkyNET"
+          ]
+        },
+        {
+          "title": "The Terminator: Future Shock",
+          "aliases": [
+            "Future Shock",
+            "Terminator: Future Shock"
+          ]
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "skynet-godot",
+      "url": "https://github.com/nautilusbits/skynet-godot",
+      "repo": "nautilusbits/skynet-godot"
+    },
+    {
+      "games": [
+        {
+          "title": "WWF No Mercy"
+        }
+      ],
+      "platform": "n64",
+      "method": "recomp",
+      "project": "WWF No Mercy: Recompiled",
+      "url": "https://github.com/jessetbh/WWFNoMercyRecomp",
+      "repo": "jessetbh/WWFNoMercyRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Resistance: Fall of Man"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "Resistance: Fall of Man Recomp",
+      "url": "https://github.com/miroslavdanutalexandru-alt/Resistance-Fall-of-Man-Recomp",
+      "repo": "miroslavdanutalexandru-alt/Resistance-Fall-of-Man-Recomp",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "13 Sentinels: Aegis Rim"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "13 Sentinels: Aegis Rim PC Port",
+      "url": "https://github.com/saulob/13-sentinels-aegis-rim-pc",
+      "repo": "saulob/13-sentinels-aegis-rim-pc",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Chrono Trigger"
+        }
+      ],
+      "platform": "snes",
+      "method": "fan_port",
+      "project": "BelthasarProject",
+      "url": "https://github.com/TemplarServant/BelthasarProject",
+      "repo": "TemplarServant/BelthasarProject",
       "status": "experimental"
     }
   ]
