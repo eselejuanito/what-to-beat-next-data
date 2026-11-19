@@ -8,7 +8,7 @@ Rebuilt every day by GitHub Actions and published at **https://eselejuanito.gith
 |---|---|
 | `index.json` | version, date, sources and licenses, list of files |
 | `ports.json` | fan ports, recompilations, PortMaster (Linux handhelds) and nxnative (Switch games on Apple chips): the game, the project, the systems it runs on |
-| `igdb.json` | release year, rating and time to beat (from IGDB) of the catalog's games, for the extension's catalog page |
+| `igdb.json` | release year, rating and time to beat (from IGDB) of the catalog's games, for the extension's catalog page. A time IGDB lacks may come from HowLongToBeat (the game then has `hltb: [fields]`); games IGDB does not have at all, but with a time, are under `hltbOnly` |
 | `classics.json` | well-liked games (IGDB: 60 %+ from 10+ votes) of the consoles without an emulator list, NES to Switch and arcade, each with its year, rating, votes and time; taken again monthly |
 | `emu/ps2.json` | PlayStation 2 games and how well PCSX2 runs them |
 | `emu/ps3.json` | PlayStation 3 games and how well RPCS3 runs them |
@@ -22,9 +22,11 @@ Status: `verified` (playable, or an official build of the port for that system),
 
 ## Rules
 
+- Demos, betas and trials are not listed (the full game is, or is not, a game of its own): `scripts/demos.mjs` decides by name and keeps real games whose title only contains the word ("Prototype", "Urban Trial Freestyle"), and P.T.
+
 - Facts and links to each project's own page only. **Never game files, ROMs, disc images, BIOS, firmware or keys**, nor links to them. Every port and emulator here needs the player's own copy of the game.
 - Sources are read politely: once a day, one request at a time, identified as `what-to-beat-next-data`.
-- Nothing from HowLongToBeat.
+- HowLongToBeat: only approximate **hours** for games IGDB has no time for, in the small curated file [sources/hltb-times.json](sources/hltb-times.json) (facts, no text, no ratings). The dataset it comes from is local, never in this repository; it is matched offline with `scripts/hltb-fill.mjs`. IGDB's own time always wins when it has one.
 
 ## Sources and licenses
 

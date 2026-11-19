@@ -16,6 +16,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { igdb, classics, dropImpossibleTimes } from './igdb.mjs';
+import { loadHltbTimes, applyHltbTimes } from './hltb.mjs';
+import { dropDemos } from './demos.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'site');
@@ -341,6 +343,7 @@ const SOURCES = [
   { id: 'shadps4', name: 'shadPS4 compatibility reports', url: 'https://github.com/shadps4-compatibility/shadps4-game-compatibility', license: 'no license stated; titles and statuses only, linked back', note: 'PlayStation 4' },
   { id: 'sharpemu', name: 'SharpEmu compatibility reports', url: 'https://github.com/sharpemu/sharpemu-site', license: 'MIT', note: 'PlayStation 5' },
   { id: 'kytyps5', name: 'KytyPS5 compatibility list', url: 'https://kytyps5.github.io/', license: 'GPL-2.0', note: 'PlayStation 5' },
+  { id: 'hltb', name: 'HowLongToBeat (approximate times, curated offline)', url: 'https://github.com/eselejuanito/what-to-beat-next-data/blob/main/sources/hltb-times.json', license: 'facts only (hours), where IGDB has none', note: 'times to beat' },
   { id: 'igdb', name: 'IGDB', url: 'https://www.igdb.com/', license: 'IGDB API, non-commercial, credited', note: 'years, ratings, times to beat' },
   { id: 'pcsx2', name: 'PCSX2 game database', url: 'https://github.com/PCSX2/pcsx2/blob/master/bin/resources/GameIndex.yaml', license: 'GPL-3.0', note: 'PlayStation 2' },
 ];
@@ -384,6 +387,14 @@ async function main() {
     }),
     ...(offline ? {} : { ps5: { project: 'SharpEmu / KytyPS5', url: 'https://github.com/sharpemu/sharpemu', games: await list('ps5', ps5) } }),
   };
+  // Demos, betas and trials are not games of their own: left out (scripts/demos.mjs).
+  const demosDropped = [];
+  for (const emulator of Object.values(emulators)) {
+    const { games, dropped } = dropDemos(emulator.games);
+    emulator.games = games;
+    demosDropped.push(...dropped);
+  }
+  console.log(`demos: ${demosDropped.length} left out of the emulator lists`);
   for (const [platform, emulator] of Object.entries(emulators)) {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });
     console.log(`emu/${platform}: ${emulator.games.length} games`);
@@ -396,6 +407,13 @@ async function main() {
   ];
   const times = offline ? null : await igdb(wanted, previous);
   const igdbFile = times ? { generated, ...times } : previous;
+  if (igdbFile) {
+    // Approximate times for what IGDB has none for (sources/hltb-times.json, made offline from a local CSV that is not in this repository).
+    const ids = [...new Set(wanted.map((game) => `${game.platform}|${matchKey(game.title)}`))];
+    const { filled, onlyHltb } = applyHltbTimes(igdbFile.games, await loadHltbTimes(join(ROOT, 'sources/hltb-times.json')), ids);
+    if (Object.keys(onlyHltb).length) igdbFile.hltbOnly = onlyHltb; else delete igdbFile.hltbOnly;
+    console.log(`hltb: times added to ${filled} games (${Object.keys(onlyHltb).length} of them not in IGDB)`);
+  }
   if (igdbFile) console.log(`igdb: ${dropImpossibleTimes(Object.values(igdbFile.games))} impossible times dropped`);
   if (igdbFile) await write('igdb.json', igdbFile);
   // Well-liked games of the consoles without an emulator list (NES to Switch, arcade), monthly.

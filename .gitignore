@@ -1,2 +1,4 @@
 site/
 .DS_Store
+out/
+hltb_dataset_normalized.csv

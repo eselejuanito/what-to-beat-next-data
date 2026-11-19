@@ -43,8 +43,9 @@ async function query(auth, endpoint, body) {
 
 const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 const FIELDS = 'fields name,slug,cover.image_id,genres,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
-// A rating from a handful of votes says little (100 % from 2 people): left out under this many.
-const MIN_VOTES = 5;
+// A rating from a handful of votes says little (100 % from 2 people), but with nothing else it is better than no rating at all
+// (4,486 of the catalog's 9,277 IGDB games had none at 5): the vote count always goes with it, so the extension can show it as "few votes".
+const MIN_VOTES = 2;
 
 // The IGDB game for a title: its name (or one of its other names) gives the same key, on that platform.
 // Several: the earliest one (the original rather than a later re-release with the same name).

@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/hosts.test.mjs
+      - run: node scripts/hltb.test.mjs
+      - run: node scripts/demos.test.mjs
       - run: node scripts/build.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
