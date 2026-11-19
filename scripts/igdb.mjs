@@ -56,6 +56,19 @@ function pick(results, key, ids) {
 
 const hours = (seconds) => (seconds ? Math.round(seconds / 360) / 10 : undefined);
 
+// IGDB's times have typos (World Cup 98: 567,890 h; Breath of Fire II: 9,583 h). Over MAX_HOURS a time is dropped,
+// whether it was just taken or kept from an earlier build. Returns how many it dropped.
+export const MAX_HOURS = 500;
+export function dropImpossibleTimes(games) {
+  let dropped = 0;
+  for (const game of games) {
+    for (const key of ['main', 'extra', 'full']) {
+      if (game[key] > MAX_HOURS) { delete game[key]; dropped++; }
+    }
+  }
+  return dropped;
+}
+
 // wanted: [{ platform, title }]. previous: the igdb.json published last time, or null.
 // Returns { games: { "<platform>|<key>": { id, name, slug, cover?, year?, rating?, main?, extra?, full?, at } }, misses: { "<platform>|<key>": at } },
 // or null without credentials (the build then keeps the previous file).
