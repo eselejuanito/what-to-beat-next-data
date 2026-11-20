@@ -1,7 +1,8 @@
-// Offline tool: matches the catalog's games against a local HowLongToBeat CSV (hltb_dataset_normalized.csv, NOT
-// kept in this repository) and writes the small result the build reads, plus what still needs a human look.
+// Offline tool: matches the catalog's games against HowLongToBeat's games (sources/hltb-games.json, made by scripts/hltb-import.mjs
+// from a CSV that is NOT kept in this repository) and writes the small result the build reads, plus what still needs a human look.
 //
 //   node scripts/hltb-fill.mjs [--csv file] [--site dir-or-url] [--out dir]
+//   (--csv: read that CSV directly instead of sources/hltb-games.json)
 //
 // Reads the catalog (ports.json + emu/*.json) and igdb.json from --site (default: the published site).
 // Writes:
@@ -21,22 +22,12 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { matchKey } from './build.mjs';
 import { isDemo } from './demos.mjs';
+import { parseCsv, compact, expand, loadHltbGames } from './hltb-import.mjs';
 
 const BASE = 'https://eselejuanito.github.io/what-to-beat-next-data/';
 const ROOT = new URL('..', import.meta.url).pathname;
-const MAX_HOURS = 500;
 const FUZZY_MIN = 0.85;
 const EMU = ['ps2', 'ps3', 'gamecube', 'wii', 'wiiu', 'psp', 'ps4', 'ps5'];
-
-// Catalog platform id -> HLTB platform names (HLTB lists several per game, comma separated).
-const HLTB_PLATFORMS = {
-  pc: ['PC', 'Mac', 'Linux'], ps1: ['PlayStation'], ps2: ['PlayStation 2', 'Playstation 2'], ps3: ['PlayStation 3'], ps4: ['PlayStation 4'],
-  ps5: ['PlayStation 5'], psp: ['PlayStation Portable'], vita: ['PlayStation Vita'], xbox: ['Xbox'], xbox360: ['Xbox 360'],
-  nes: ['NES'], snes: ['Super Nintendo'], n64: ['Nintendo 64'], gamecube: ['Nintendo GameCube'], wii: ['Wii'], wiiu: ['Wii U'],
-  switch: ['Nintendo Switch'], gb: ['Game Boy'], gbc: ['Game Boy Color'], gba: ['Game Boy Advance'], nds: ['Nintendo DS'], '3ds': ['Nintendo 3DS'],
-  genesis: ['Sega Mega Drive/Genesis'], mastersystem: ['Sega Master System'], gamegear: ['Sega Game Gear'], segacd: ['Sega CD'],
-  '32x': ['Sega 32X'], saturn: ['Sega Saturn'], dreamcast: ['Dreamcast'], arcade: ['Arcade'], neogeo: ['Neo Geo'], pce: ['TurboGrafx-16'], pcecd: ['TurboGrafx-CD'],
-};
 
 // ---- helpers ---------------------------------------------------------------------------------------
 function arg(name, fallback) {
@@ -50,28 +41,6 @@ async function load(base, path) {
     return response.json();
   }
   return JSON.parse(await readFile(join(base, path), 'utf8'));
-}
-
-// CSV with quoted fields (and doubled quotes inside them). Returns an array of objects.
-export function parseCsv(text) {
-  const rows = [];
-  let row = [], field = '', quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (quoted) {
-      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else quoted = false; } else field += c;
-    } else if (c === '"') quoted = true;
-    else if (c === ',') { row.push(field); field = ''; }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++;
-      row.push(field); field = '';
-      if (row.length > 1 || row[0] !== '') rows.push(row);
-      row = [];
-    } else field += c;
-  }
-  if (field !== '' || row.length) { row.push(field); rows.push(row); }
-  const head = rows.shift();
-  return rows.map((r) => Object.fromEntries(head.map((name, i) => [name, r[i] ?? ''])));
 }
 
 const ROMAN = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8, ix: 9, x: 10, xi: 11, xii: 12, xiii: 13, xiv: 14, xv: 15 };
@@ -113,31 +82,25 @@ const trigrams = (key) => { const set = new Set(); for (let i = 0; i + 3 <= key.
 // The numbers a title carries, roman ones too (Swords & Soldiers is not Swords & Soldiers II; Bloons TD X is not Bloons TD).
 const numbersOf = (name) => (name || '').toLowerCase().split(/[^\p{L}\p{N}]+/u).map((word) => (ROMAN[word] ? String(ROMAN[word]) : /^\d+$/.test(word) ? word : '')).filter(Boolean).join(',');
 
-const hrs = (text) => {
-  const n = Number(text);
-  return n > 0 && n <= MAX_HOURS ? Math.round(n * 10) / 10 : undefined;
-};
-const timesOf = (row) => ({ main: hrs(row.main_story), extra: hrs(row.main_plus_sides), full: hrs(row.completionist) });
+const timesOf = (row) => ({ main: row.main, extra: row.extra, full: row.full });
 const hasTime = (row) => Object.values(timesOf(row)).some((v) => v !== undefined);
-const polled = (row) => Math.max(Number(row.main_story_polled) || 0, Number(row.main_plus_sides_polled) || 0, Number(row.completionist_polled) || 0);
+const polled = (row) => row.polled || 0;
 
 // ---- main ------------------------------------------------------------------------------------------
 async function main() {
-  const csvPath = arg('csv', join(ROOT, 'hltb_dataset_normalized.csv'));
+  const csvPath = arg('csv', null);
   const site = arg('site', BASE);
   const out = arg('out', join(ROOT, 'out'));
 
-  const rows = parseCsv(await readFile(csvPath, 'utf8')).filter((row) => row.type === 'game');
+  const rows = csvPath ? expand(compact(parseCsv(await readFile(csvPath, 'utf8'))).rows) : await loadHltbGames();
+  console.log(`hltb games: ${rows.length}${csvPath ? ` (from ${csvPath})` : ' (sources/hltb-games.json)'}`);
   const withTimes = rows.filter(hasTime);
-  console.log(`csv: ${rows.length} games, ${withTimes.length} with a time`);
 
   // Indexes. Exact and variant ones over all rows (to tell "found, no times" from "not found"); trigrams over rows with times.
   const byKey = new Map();
   const byVariant = new Map();
   const push = (map, key, value) => { const list = map.get(key); if (list) list.push(value); else map.set(key, [value]); };
   for (const row of rows) {
-    row.platforms = new Set(row.platform.split(',').map((p) => p.trim()).filter(Boolean));
-    row.year = Number(row.release_year) || null;
     row.key = matchKey(row.name);
     if (!row.key) continue;
     push(byKey, row.key, row);
@@ -159,7 +122,7 @@ async function main() {
   for (const platform of EMU) for (const game of (await load(site, `emu/${platform}.json`)).games) if (game.status !== 'no') want(platform, game.title);
   console.log(`catalog: ${wanted.size} games; igdb.json: ${Object.keys(igdb.games).length} found, ${Object.keys(igdb.misses || {}).length} misses`);
 
-  const platformOk = (row, platform) => (HLTB_PLATFORMS[platform] || []).some((n) => row.platforms.has(n));
+  const platformOk = (row, platform) => row.platforms.has(platform);
   // Years must agree; with a year unknown on a side, the platform has to match instead.
   const agrees = (row, platform, year, tolerance) => (year && row.year ? Math.abs(row.year - year) <= tolerance : platformOk(row, platform));
   const best = (candidates, platform, year) => {
@@ -184,7 +147,7 @@ async function main() {
     const record = { id, platform, title, igdbName: ig ? ig.name : undefined, year: year || undefined };
     const accept = (row, by, extra) => {
       const t = timesOf(row);
-      result[id] = { ...Object.fromEntries(Object.entries(t).filter(([, v]) => v !== undefined)), h: Number(row.id), ...(by === 'exact' ? {} : { by }) };
+      result[id] = { ...Object.fromEntries(Object.entries(t).filter(([, v]) => v !== undefined)), h: Number(row.id), ...(by === 'exact' ? {} : { by, n: row.name }) };
       if (by !== 'exact') auto.push({ ...record, hltb: brief(row), by, ...extra });
     };
     const names = [title, ig && ig.name].filter(Boolean);
@@ -265,7 +228,7 @@ async function main() {
   const generated = new Date().toISOString().slice(0, 10);
   const lines = Object.entries(result).sort(([a], [b]) => (a < b ? -1 : 1)).map(([id, value]) => `${JSON.stringify(id)}:${JSON.stringify(value)}`);
   await writeFile(join(ROOT, 'sources/hltb-times.json'),
-    `{"generated":"${generated}","note":"Approximate times (hours) from HowLongToBeat, made offline by scripts/hltb-fill.mjs; the build uses only the fields IGDB lacks. main=main story, extra=main+sides, full=completionist. h=HowLongToBeat id.","games":{\n${lines.join(',\n')}\n}}\n`);
+    `{"generated":"${generated}","note":"Approximate times (hours) from HowLongToBeat, made offline by scripts/hltb-fill.mjs; the build uses only the fields IGDB lacks. main=main story, extra=main+sides, full=completionist. h=HowLongToBeat id; n=its name when it differs from ours (igdb.mjs tries it as another spelling).","games":{\n${lines.join(',\n')}\n}}\n`);
   await mkdir(out, { recursive: true });
   await writeFile(join(out, 'hltb-auto.json'), JSON.stringify({ generated, count: auto.length, games: auto }, null, 1));
   await writeFile(join(out, 'hltb-review.json'), JSON.stringify({ generated, count: review.length, games: review }, null, 1));

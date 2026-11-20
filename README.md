@@ -26,7 +26,7 @@ Status: `verified` (playable, or an official build of the port for that system),
 
 - Facts and links to each project's own page only. **Never game files, ROMs, disc images, BIOS, firmware or keys**, nor links to them. Every port and emulator here needs the player's own copy of the game.
 - Sources are read politely: once a day, one request at a time, identified as `what-to-beat-next-data`.
-- HowLongToBeat: only approximate **hours** for games IGDB has no time for, in the small curated file [sources/hltb-times.json](sources/hltb-times.json) (facts, no text, no ratings). The dataset it comes from is local, never in this repository; it is matched offline with `scripts/hltb-fill.mjs`. IGDB's own time always wins when it has one.
+- HowLongToBeat: only approximate **hours** (and year / system, to match the right game) for games IGDB has no time for. The cleaned copy lives in [sources/hltb-games.json](sources/hltb-games.json) (games with a time, no demos, nothing else: no text, no ratings) and the result in [sources/hltb-times.json](sources/hltb-times.json). The original CSV is local, never in this repository: `scripts/hltb-import.mjs` makes the first file from it, `scripts/hltb-fill.mjs` matches the catalog against it. IGDB's own time always wins when it has one.
 
 ## Sources and licenses
 

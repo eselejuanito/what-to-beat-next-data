@@ -405,12 +405,18 @@ async function main() {
     ...portList.flatMap((port) => port.games.map((game) => ({ platform: port.platform, title: game.title }))),
     ...Object.entries(emulators).flatMap(([platform, emulator]) => emulator.games.filter((game) => game.status !== 'no').map((game) => ({ platform, title: game.title }))),
   ];
-  const times = offline ? null : await igdb(wanted, previous);
+  // HowLongToBeat's name for a game, when it differs from ours, is one more spelling for IGDB's lookup.
+  const hltbFile = await loadHltbTimes(join(ROOT, 'sources/hltb-times.json'));
+  const withAlt = wanted.map((game) => {
+    const entry = hltbFile && hltbFile.games[`${game.platform}|${matchKey(game.title)}`];
+    return entry && entry.n ? { ...game, alt: [entry.n] } : game;
+  });
+  const times = offline ? null : await igdb(withAlt, previous);
   const igdbFile = times ? { generated, ...times } : previous;
   if (igdbFile) {
     // Approximate times for what IGDB has none for (sources/hltb-times.json, made offline from a local CSV that is not in this repository).
     const ids = [...new Set(wanted.map((game) => `${game.platform}|${matchKey(game.title)}`))];
-    const { filled, onlyHltb } = applyHltbTimes(igdbFile.games, await loadHltbTimes(join(ROOT, 'sources/hltb-times.json')), ids);
+    const { filled, onlyHltb } = applyHltbTimes(igdbFile.games, hltbFile, ids);
     if (Object.keys(onlyHltb).length) igdbFile.hltbOnly = onlyHltb; else delete igdbFile.hltbOnly;
     console.log(`hltb: times added to ${filled} games (${Object.keys(onlyHltb).length} of them not in IGDB)`);
   }

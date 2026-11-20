@@ -5,9 +5,13 @@
 // What was found or not is kept in the published igdb.json and looked up again after REFRESH_DAYS,
 // so a daily build only asks for new games (and BUDGET at most of the slow one-by-one searches).
 import { matchKey } from './build.mjs';
+import { spellings, keysOf } from './titles.mjs';
 
 const API = 'https://api.igdb.com/v4/';
 const REFRESH_DAYS = 30;
+// Bumped when the lookup learns to find more (other spellings of a title): the games it did not find are then looked up again once,
+// instead of waiting out REFRESH_DAYS.
+const LOOKUP_VERSION = 2;
 const BUDGET = 2500;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -47,11 +51,15 @@ const FIELDS = 'fields name,slug,cover.image_id,genres,alternative_names.name,fi
 // (4,486 of the catalog's 9,277 IGDB games had none at 5): the vote count always goes with it, so the extension can show it as "few votes".
 const MIN_VOTES = 2;
 
-// The IGDB game for a title: its name (or one of its other names) gives the same key, on that platform.
+// The IGDB game for a title: its name (or one of its other names) gives one of the title's keys, on that platform.
+// `keys`: keysOf(title) (every spelling, see titles.mjs). `year`: a "(1997)" tag of the title, when it has one: then only a game of
+// that year (+-1) counts (Shadow Warrior (1997) is not the 2013 game).
 // Several: the earliest one (the original rather than a later re-release with the same name).
-function pick(results, key, ids) {
-  const same = results.filter((game) => (game.platforms || []).some((id) => ids.includes(id))
-    && [game.name, ...(game.alternative_names || []).map((alt) => alt.name)].some((name) => matchKey(name) === key));
+export function pick(results, keys, ids, year = null) {
+  const keySet = keys instanceof Set ? keys : new Set([keys]);
+  let same = results.filter((game) => (game.platforms || []).some((id) => ids.includes(id))
+    && [game.name, ...(game.alternative_names || []).map((alt) => alt.name)].some((name) => keySet.has(matchKey(name))));
+  if (year) same = same.filter((game) => game.first_release_date && Math.abs(new Date(game.first_release_date * 1000).getUTCFullYear() - year) <= 1);
   return same.sort((a, b) => (a.first_release_date || Infinity) - (b.first_release_date || Infinity))[0] || null;
 }
 
@@ -70,7 +78,7 @@ export function dropImpossibleTimes(games) {
   return dropped;
 }
 
-// wanted: [{ platform, title }]. previous: the igdb.json published last time, or null.
+// wanted: [{ platform, title, alt?: [other names, e.g. HowLongToBeat's] }]. previous: the igdb.json published last time, or null.
 // Returns { games: { "<platform>|<key>": { id, name, slug, cover?, year?, rating?, main?, extra?, full?, at } }, misses: { "<platform>|<key>": at } },
 // or null without credentials (the build then keeps the previous file).
 export async function igdb(wanted, previous, { budget = BUDGET, log = console.log } = {}) {
@@ -81,29 +89,30 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   const games = {};
   const misses = {};
   const todo = new Map();
-  for (const { platform, title } of wanted) {
+  for (const { platform, title, alt } of wanted) {
     const key = matchKey(title);
     const id = `${platform}|${key}`;
     if (!key || !PLATFORMS[platform] || todo.has(id) || games[id] || misses[id]) continue;
     const known = previous && previous.games && previous.games[id];
-    const missed = previous && previous.misses && previous.misses[id];
+    const missed = previous && previous.v === LOOKUP_VERSION && previous.misses && previous.misses[id];
     if (known && fresh(known.at)) games[id] = known;
     else if (missed && fresh(missed)) misses[id] = missed;
-    else todo.set(id, { platform, title, key });
+    else todo.set(id, { platform, title, key, ...spellings(title, alt), keys: keysOf(title, alt) });
   }
   log(`igdb: ${Object.keys(games).length} kept, ${Object.keys(misses).length} misses kept, ${todo.size} to look up`);
 
   const found = new Map();
-  // 1. Exact names, 50 a request, per platform.
+  // 1. Exact names (each spelling of a title), about 50 names a request, per platform.
   const byPlatform = new Map();
   for (const [id, entry] of todo) byPlatform.set(entry.platform, [...(byPlatform.get(entry.platform) || []), [id, entry]]);
   for (const [platform, entries] of byPlatform) {
     const ids = PLATFORMS[platform];
-    for (let i = 0; i < entries.length; i += 50) {
-      const chunk = entries.slice(i, i + 50);
-      const results = await query(auth, 'games', `${FIELDS} where name = (${chunk.map(([, entry]) => quote(entry.title)).join(',')}) & platforms = (${ids.join(',')}); limit 500;`);
+    for (let i = 0; i < entries.length; i += 20) {
+      const chunk = entries.slice(i, i + 20);
+      const names = [...new Set(chunk.flatMap(([, entry]) => entry.names.slice(0, 5)))];
+      const results = await query(auth, 'games', `${FIELDS} where name = (${names.map(quote).join(',')}) & platforms = (${ids.join(',')}); limit 500;`);
       for (const [id, entry] of chunk) {
-        const game = pick(results, entry.key, ids);
+        const game = pick(results, entry.keys, ids, entry.year);
         if (game) found.set(id, game);
       }
     }
@@ -111,14 +120,19 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   log(`igdb: ${found.size} by exact name`);
 
   // 2. The rest one by one with IGDB's search (other spellings: "Grand Theft Auto - San Andreas"), up to the budget.
+  // The cleaned title first, then an alternate name (HowLongToBeat's) when there is one.
   let searched = 0;
   for (const [id, entry] of todo) {
     if (found.has(id)) continue;
     if (searched >= budget) break;
-    searched++;
     const ids = PLATFORMS[entry.platform];
-    const results = await query(auth, 'games', `search ${quote(entry.title.replace(/\s+-\s+/g, ': '))}; ${FIELDS} where platforms = (${ids.join(',')}); limit 20;`);
-    const game = pick(results, entry.key, ids);
+    let game = null;
+    for (const text of entry.search.slice(0, 2)) {
+      searched++;
+      const results = await query(auth, 'games', `search ${quote(text)}; ${FIELDS} where platforms = (${ids.join(',')}); limit 20;`);
+      game = pick(results, entry.keys, ids, entry.year);
+      if (game) break;
+    }
     if (game) found.set(id, game);
     else misses[id] = now;
   }
@@ -163,7 +177,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
     }).filter(([, value]) => value !== undefined));
   }
   log(`igdb: ${Object.keys(games).length} games, ${[...Object.values(games)].filter((game) => game.main || game.extra).length} with a time; ${Object.keys(misses).length} not found`);
-  return { games, misses };
+  return { games, misses, v: LOOKUP_VERSION };
 }
 
 // Well-liked games of the consoles that have no per-game emulator list (NES to Switch, arcade): IGDB's

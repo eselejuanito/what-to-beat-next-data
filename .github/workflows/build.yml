@@ -24,6 +24,8 @@ jobs:
       - run: node scripts/hosts.test.mjs
       - run: node scripts/hltb.test.mjs
       - run: node scripts/demos.test.mjs
+      - run: node scripts/titles.test.mjs
+      - run: node scripts/hltb-import.test.mjs
       - run: node scripts/build.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
