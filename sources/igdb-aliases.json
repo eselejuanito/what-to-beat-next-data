@@ -1,0 +1,4 @@
+{"note":"Hand-made help for the IGDB lookup (scripts/igdb.mjs), by catalog game (platform|key): a string = another name IGDB uses for it (one more spelling to try); null = looked at by hand, IGDB does not have it under any name (not searched again; the player's own HowLongToBeat list covers it in the extension).","games":{
+"ps2|snkvscapcomchaos":null,
+"wii|guiltygearxxcore":"Guilty Gear XX Accent Core"
+}}

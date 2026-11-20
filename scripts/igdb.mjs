@@ -11,7 +11,7 @@ const API = 'https://api.igdb.com/v4/';
 const REFRESH_DAYS = 30;
 // Bumped when the lookup learns to find more (other spellings of a title): the games it did not find are then looked up again once,
 // instead of waiting out REFRESH_DAYS.
-const LOOKUP_VERSION = 2;
+const LOOKUP_VERSION = 3;
 const BUDGET = 2500;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -57,10 +57,23 @@ const MIN_VOTES = 2;
 // Several: the earliest one (the original rather than a later re-release with the same name).
 export function pick(results, keys, ids, year = null) {
   const keySet = keys instanceof Set ? keys : new Set([keys]);
-  let same = results.filter((game) => (game.platforms || []).some((id) => ids.includes(id))
+  let same = results.filter((game) => (!ids || (game.platforms || []).some((id) => ids.includes(id)))
     && [game.name, ...(game.alternative_names || []).map((alt) => alt.name)].some((name) => keySet.has(matchKey(name))));
   if (year) same = same.filter((game) => game.first_release_date && Math.abs(new Date(game.first_release_date * 1000).getUTCFullYear() - year) <= 1);
   return same.sort((a, b) => (a.first_release_date || Infinity) - (b.first_release_date || Infinity))[0] || null;
+}
+
+// The same, on ANY platform: a rating and a time belong to the game, not to the console, and IGDB often lists a game only for some
+// systems (a PS5 port found only under PC / PS4). Stricter than pick(): when the matching games come out in years more than 2
+// apart they are different games with the same name (Speed, Alien, a remake): nothing is guessed. Marked `xp: 1` where it is used.
+export function pickAnyPlatform(results, keys, year = null) {
+  const matches = pick(results, keys, null, year);
+  if (!matches) return null;
+  const keySet = keys instanceof Set ? keys : new Set([keys]);
+  const same = results.filter((game) => [game.name, ...(game.alternative_names || []).map((alt) => alt.name)].some((name) => keySet.has(matchKey(name))));
+  const years = same.map((game) => (game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : null)).filter(Boolean);
+  if (years.length && Math.max(...years) - Math.min(...years) > 2) return null;
+  return matches;
 }
 
 const hours = (seconds) => (seconds ? Math.round(seconds / 360) / 10 : undefined);
@@ -89,8 +102,9 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   const games = {};
   const misses = {};
   const todo = new Map();
-  for (const { platform, title, alt } of wanted) {
+  for (const { platform, title, alt, skip } of wanted) {
     const key = matchKey(title);
+    if (skip) continue;   // looked at by hand: IGDB does not have it (sources/igdb-aliases.json)
     const id = `${platform}|${key}`;
     if (!key || !PLATFORMS[platform] || todo.has(id) || games[id] || misses[id]) continue;
     const known = previous && previous.games && previous.games[id];
@@ -122,6 +136,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   // 2. The rest one by one with IGDB's search (other spellings: "Grand Theft Auto - San Andreas"), up to the budget.
   // The cleaned title first, then an alternate name (HowLongToBeat's) when there is one.
   let searched = 0;
+  const otherPlatform = new Set();
   for (const [id, entry] of todo) {
     if (found.has(id)) continue;
     if (searched >= budget) break;
@@ -133,8 +148,19 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
       game = pick(results, entry.keys, ids, entry.year);
       if (game) break;
     }
+    if (!game) {
+      // Not on that system as far as IGDB says: the same game under any other system (see pickAnyPlatform).
+      searched++;
+      const results = await query(auth, 'games', `search ${quote(entry.search[0] || entry.title)}; ${FIELDS} limit 20;`);
+      game = pickAnyPlatform(results, entry.keys, entry.year);
+      if (game) otherPlatform.add(id);
+    }
     if (game) found.set(id, game);
     else misses[id] = now;
+  }
+  if (otherPlatform.size) {
+    log(`igdb: ${otherPlatform.size} found only under another system:`);
+    for (const id of [...otherPlatform].slice(0, 30)) log(`  ${id} -> ${found.get(id).name} (${found.get(id).first_release_date ? new Date(found.get(id).first_release_date * 1000).getUTCFullYear() : '?'})`);
   }
   log(`igdb: ${searched} searched one by one, ${found.size} found in all`);
 
@@ -155,6 +181,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
       votes: game.total_rating && game.total_rating_count >= MIN_VOTES ? game.total_rating_count : undefined,
       main: hours(time.hastily), extra: hours(time.normally), full: hours(time.completely),
       at: now,
+      xp: otherPlatform.has(id) ? 1 : undefined,
     }).filter(([, value]) => value !== undefined));
   }
   // Ratings move: those of the games kept from the last build are read again, 500 a request.

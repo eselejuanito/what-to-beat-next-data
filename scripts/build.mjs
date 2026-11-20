@@ -407,9 +407,14 @@ async function main() {
   ];
   // HowLongToBeat's name for a game, when it differs from ours, is one more spelling for IGDB's lookup.
   const hltbFile = await loadHltbTimes(join(ROOT, 'sources/hltb-times.json'));
+  // sources/igdb-aliases.json: { "<platform>|<key>": "another name IGDB uses" | null }. null = looked at by hand, IGDB does not have it.
+  const igdbAliases = (await readFile(join(ROOT, 'sources/igdb-aliases.json'), 'utf8').then(JSON.parse).catch(() => ({ games: {} }))).games;
   const withAlt = wanted.map((game) => {
-    const entry = hltbFile && hltbFile.games[`${game.platform}|${matchKey(game.title)}`];
-    return entry && entry.n ? { ...game, alt: [entry.n] } : game;
+    const id = `${game.platform}|${matchKey(game.title)}`;
+    if (igdbAliases[id] === null) return { ...game, skip: true };
+    const entry = hltbFile && hltbFile.games[id];
+    const alt = [...(entry && entry.n ? [entry.n] : []), ...(typeof igdbAliases[id] === 'string' ? [igdbAliases[id]] : [])];
+    return alt.length ? { ...game, alt } : game;
   });
   const times = offline ? null : await igdb(withAlt, previous);
   const igdbFile = times ? { generated, ...times } : previous;

@@ -36,7 +36,7 @@ assert.deepStrictEqual(spellings('Doom').names, ['Doom']);
 console.log('titles.test: ok');
 
 // igdb.mjs pick(): the same game under another spelling, and the year hint.
-import { pick } from './igdb.mjs';
+import { pick, pickAnyPlatform } from './igdb.mjs';
 const ts = (year) => Date.UTC(year, 5, 1) / 1000;
 const PC = [6, 14, 3];
 const results = [
@@ -52,3 +52,18 @@ assert.ok(pick(results, keysOf('Metal Slug 4 & 5 [Disc 2 of 2]'), [8]));
 assert.ok(pick(results, keysOf('Pokk&eacute;n Tournament'), [41]));                           // entity + alternative name
 assert.strictEqual(pick(results, keysOf('Metal Slug 4 & 5'), PC), null);                      // wrong platform
 console.log('igdb pick: ok');
+
+// pickAnyPlatform(): the game under another system, but never a different game with the same name.
+const any = [
+  { name: '3D Billiards: Pool & Snooker', platforms: [6, 48], first_release_date: ts(2019) },   // PC / PS4 only
+  { name: 'Speed', platforms: [6], first_release_date: ts(1994) },
+  { name: 'Speed', platforms: [5], first_release_date: ts(2010) },                              // another game
+  { name: 'Guilty Gear XX Accent Core', platforms: [8, 5], first_release_date: ts(2006) },
+  { name: 'Guilty Gear XX Accent Core', platforms: [38], first_release_date: ts(2008) },        // same game, ported
+];
+assert.strictEqual(pick(any, keysOf('3D Billiards - Pool & Snooker'), [167]), null);              // PS5: not listed
+assert.ok(pickAnyPlatform(any, keysOf('3D Billiards - Pool & Snooker')));                         // but the game exists
+assert.strictEqual(pickAnyPlatform(any, keysOf('Speed')), null);                                  // 16 years apart: ambiguous, not guessed
+assert.strictEqual(pickAnyPlatform(any, keysOf('Guilty Gear XX ^ Core', ['Guilty Gear XX Accent Core'])).first_release_date, ts(2006));
+assert.strictEqual(pickAnyPlatform(any, keysOf('Something Else')), null);
+console.log('igdb pickAnyPlatform: ok');
