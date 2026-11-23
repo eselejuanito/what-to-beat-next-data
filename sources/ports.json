@@ -939,6 +939,45 @@
         },
         {
           "title": "Marvel's Spider-Man Remastered"
+        },
+        {
+          "title": "The Beast Inside"
+        },
+        {
+          "title": "Final Fantasy VII Rebirth"
+        },
+        {
+          "title": "Moss: The Forgotten Relic"
+        },
+        {
+          "title": "Hi-Fi RUSH"
+        },
+        {
+          "title": "Risk of Rain 2"
+        },
+        {
+          "title": "Hellblade: Senua's Sacrifice"
+        },
+        {
+          "title": "Teenage Mutant Ninja Turtles: The Cowabunga Collection"
+        },
+        {
+          "title": "Hogwarts Legacy"
+        },
+        {
+          "title": "Venba"
+        },
+        {
+          "title": "Iron Lung"
+        },
+        {
+          "title": "Lies of P"
+        },
+        {
+          "title": "Resident Evil 7 Biohazard"
+        },
+        {
+          "title": "Stellar Blade"
         }
       ],
       "platform": "ps5",
@@ -947,7 +986,7 @@
       "url": "https://github.com/boykopovar/AnyPS5",
       "repo": "boykopovar/AnyPS5",
       "status": "experimental",
-      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02, 2026-11-09, 2026-11-16)."
+      "note": "Hand-picked from its Game bring-up discussions: games reported as playable (2026-10-30, 2026-11-02, 2026-11-09, 2026-11-16, 2026-11-23)."
     },
     {
       "games": [
@@ -3011,6 +3050,154 @@
       "project": "BelthasarProject",
       "url": "https://github.com/TemplarServant/BelthasarProject",
       "repo": "TemplarServant/BelthasarProject",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Demon's Souls"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "Demon's Souls Recomp",
+      "url": "https://github.com/timboat/demons-souls-recomp",
+      "repo": "timboat/demons-souls-recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "Ace Combat 6: Fires of Liberation"
+        }
+      ],
+      "platform": "xbox360",
+      "method": "recomp",
+      "project": "GracemeriaRecomp",
+      "url": "https://github.com/Dipshet/GracemeriaRecomp",
+      "repo": "Dipshet/GracemeriaRecomp"
+    },
+    {
+      "games": [
+        {
+          "title": "TimeSplitters 2"
+        }
+      ],
+      "platform": "ps2",
+      "method": "recomp",
+      "project": "Crystal Cut (TimeSplitters 2)",
+      "url": "https://github.com/Destinity13/TimeSplitters-2-Native-Recomp-Windows-Linux-SteamDeck",
+      "repo": "Destinity13/TimeSplitters-2-Native-Recomp-Windows-Linux-SteamDeck"
+    },
+    {
+      "games": [
+        {
+          "title": "Alone in the Dark",
+          "aliases": [
+            "Alone in the Dark (1992)"
+          ]
+        },
+        {
+          "title": "Jack in the Dark"
+        },
+        {
+          "title": "Alone in the Dark 2"
+        },
+        {
+          "title": "Alone in the Dark 3"
+        }
+      ],
+      "platform": "pc",
+      "method": "fan_port",
+      "project": "Alone in the Dark: Classic Reborn",
+      "url": "https://github.com/nayo186/AloneInTheDarkClassicReborn",
+      "repo": "nayo186/AloneInTheDarkClassicReborn"
+    },
+    {
+      "games": [
+        {
+          "title": "Asura's Wrath"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "Asura's Wrath PC",
+      "url": "https://github.com/RecompPort/asura-wrath-pc",
+      "repo": "RecompPort/asura-wrath-pc"
+    },
+    {
+      "games": [
+        {
+          "title": "Diablo III: Reaper of Souls – Ultimate Evil Edition"
+        }
+      ],
+      "platform": "ps4",
+      "method": "fan_port",
+      "project": "SanctuaryPort",
+      "url": "https://github.com/CaduGimenes/SanctuaryPort",
+      "repo": "CaduGimenes/SanctuaryPort"
+    },
+    {
+      "games": [
+        {
+          "title": "Metroid Dread"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "Metroid Dread Recomp",
+      "url": "https://github.com/yozander2009-stack/Metroid-Dread-Recomp",
+      "repo": "yozander2009-stack/Metroid-Dread-Recomp"
+    },
+    {
+      "games": [
+        {
+          "title": "The Legend of Zelda: A Link Between Worlds"
+        }
+      ],
+      "platform": "3ds",
+      "method": "fan_port",
+      "project": "albw-native",
+      "url": "https://github.com/spacestate1/albw-native",
+      "repo": "spacestate1/albw-native",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "3D Dot Game Heroes"
+        }
+      ],
+      "platform": "ps3",
+      "method": "recomp",
+      "project": "Cubic.Heroes",
+      "url": "https://github.com/irnutsmurt/Cubic.Heroes",
+      "repo": "irnutsmurt/Cubic.Heroes",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Mario Kart 8 Deluxe"
+        }
+      ],
+      "platform": "switch",
+      "method": "recomp",
+      "project": "MK8-online",
+      "url": "https://github.com/Vnnc1/MK8-online",
+      "repo": "Vnnc1/MK8-online",
+      "status": "experimental"
+    },
+    {
+      "games": [
+        {
+          "title": "Resident Evil 4"
+        }
+      ],
+      "platform": "gamecube",
+      "method": "fan_port",
+      "project": "Nightjar",
+      "url": "https://github.com/st4rwhx/Resident-Evil-4-Native-Port",
+      "repo": "st4rwhx/Resident-Evil-4-Native-Port",
       "status": "experimental"
     }
   ]
