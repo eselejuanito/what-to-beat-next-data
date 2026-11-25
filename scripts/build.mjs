@@ -18,6 +18,7 @@ import { join } from 'node:path';
 import { igdb, classics, dropImpossibleTimes } from './igdb.mjs';
 import { loadHltbTimes, applyHltbTimes } from './hltb.mjs';
 import { dropDemos } from './demos.mjs';
+import { playable, computeNews } from './news.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'site');
@@ -399,6 +400,25 @@ async function main() {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });
     console.log(`emu/${platform}: ${emulator.games.length} games`);
   }
+  // What became playable since the published build (news.mjs): the extension's "New since your last visit".
+  // Compared with the files published before this build; no comparison (first build, a file missing) adds nothing.
+  let newsFile = null;
+  if (!offline) {
+    const publishedPorts = await get(`${BASE}ports.json`).catch(() => null);
+    let previousPlayable = null;
+    if (publishedPorts && Array.isArray(publishedPorts.ports)) {
+      const publishedEmu = {};
+      for (const platform of Object.keys(emulators)) {
+        const published = await get(`${BASE}emu/${platform}.json`).catch(() => null);
+        if (published && Array.isArray(published.games)) publishedEmu[platform] = published;
+      }
+      previousPlayable = playable(publishedPorts.ports, publishedEmu, matchKey);
+    }
+    const previousNews = await get(`${BASE}news.json`).catch(() => null);
+    newsFile = computeNews({ previous: previousPlayable, current: playable(portList, emulators, matchKey), previousNews });
+    await write('news.json', newsFile);
+    console.log(`news: ${Object.keys(newsFile.since).length} games in the last 60 days${previousPlayable ? '' : ' (no published files to compare with)'}`);
+  }
   // IGDB: every game of the catalog, asking only for the new ones (the rest come from the last published file).
   const previous = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
   const wanted = [
@@ -441,6 +461,7 @@ async function main() {
     version: 1, generated, sources: SOURCES,
     files: {
       ports: { path: 'ports.json', count: portList.length },
+      ...(newsFile ? { news: { path: 'news.json', count: Object.keys(newsFile.since).length, generated: newsFile.generated } } : {}),
       ...(classicsFile ? { classics: { path: 'classics.json', count: Object.values(classicsFile.consoles).reduce((sum, list) => sum + list.length, 0), generated: classicsFile.generated } } : {}),
       ...(igdbFile ? { igdb: { path: 'igdb.json', count: Object.keys(igdbFile.games).length, generated: igdbFile.generated } } : {}),
       emu: Object.fromEntries(Object.entries(emulators).map(([platform, emulator]) => [platform, { path: `emu/${platform}.json`, count: emulator.games.length, project: emulator.project, url: emulator.url }])),
