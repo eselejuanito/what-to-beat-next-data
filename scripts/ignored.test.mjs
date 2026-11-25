@@ -6,4 +6,5 @@ const known = { [`psp|${matchKey('Bleach ヒートザソウル2')}`]: { id: 1 } 
 const { games: kept, dropped } = dropIgnored(games, 'psp', { ids: new Set(['psp|spotifyconnect']), known });
 assert.deepStrictEqual(kept.map((game) => game.title), ['Bleach ヒートザソウル2', 'Quake']);   // found by IGDB stays
 assert.deepStrictEqual(dropped, ['Spotify Connect', '桜花センコクPortable']);
+assert.strictEqual(dropIgnored([{ title: 'Bleach ヒートザソウル2' }], 'psp', { keep: new Set([`psp|${matchKey('Bleach ヒートザソウル2')}`]) }).games.length, 1);   // the fixed keep list works without the published file
 console.log('ignored.test: ok');

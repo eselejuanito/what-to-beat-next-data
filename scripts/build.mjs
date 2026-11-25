@@ -400,9 +400,10 @@ async function main() {
   // Written in Japanese / Chinese / Korean / Cyrillic (unless IGDB found them) and what is not a game (sources/ignore-games.json).
   const previousIgdb = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
   const ignoredIds = new Set((await readFile(join(ROOT, 'sources/ignore-games.json'), 'utf8').then(JSON.parse).catch(() => ({ games: [] }))).games);
+  const keepIds = new Set((await readFile(join(ROOT, 'sources/keep-games.json'), 'utf8').then(JSON.parse).catch(() => ({ games: [] }))).games);
   let ignoredCount = 0;
   for (const [platform, emulator] of Object.entries(emulators)) {
-    const { games, dropped } = dropIgnored(emulator.games, platform, { ids: ignoredIds, known: (previousIgdb && previousIgdb.games) || {} });
+    const { games, dropped } = dropIgnored(emulator.games, platform, { ids: ignoredIds, keep: keepIds, known: (previousIgdb && previousIgdb.games) || {} });
     emulator.games = games;
     ignoredCount += dropped.length;
   }
@@ -440,9 +441,11 @@ async function main() {
   const hltbFile = await loadHltbTimes(join(ROOT, 'sources/hltb-times.json'));
   // sources/igdb-aliases.json: { "<platform>|<key>": "another name IGDB uses" | null }. null = looked at by hand, IGDB does not have it.
   const igdbAliases = (await readFile(join(ROOT, 'sources/igdb-aliases.json'), 'utf8').then(JSON.parse).catch(() => ({ games: {} }))).games;
-  const withAlt = wanted.map((game) => {
+  const withAlt = wanted.map((wantedGame) => {
+    let game = wantedGame;
     const id = `${game.platform}|${matchKey(game.title)}`;
     if (igdbAliases[id] === null) return { ...game, skip: true };
+    if (keepIds.has(id)) game = { ...game, keep: true };
     const entry = hltbFile && hltbFile.games[id];
     const alt = [...(entry && entry.n ? [entry.n] : []), ...(typeof igdbAliases[id] === 'string' ? [igdbAliases[id]] : [])];
     return alt.length ? { ...game, alt } : game;

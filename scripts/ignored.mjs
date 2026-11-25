@@ -5,12 +5,12 @@
 import { matchKey } from './build.mjs';
 import { isUnsearchable } from './titles.mjs';
 
-export function dropIgnored(games, platform, { ids = new Set(), known = {} } = {}) {
+export function dropIgnored(games, platform, { ids = new Set(), known = {}, keep = new Set() } = {}) {
   const kept = [];
   const dropped = [];
   for (const game of games) {
     const id = `${platform}|${matchKey(game.title)}`;
-    const out = ids.has(id) || (isUnsearchable(game.title) && !known[id]);
+    const out = ids.has(id) || (isUnsearchable(game.title) && !known[id] && !keep.has(id));
     (out ? dropped : kept).push(game);
   }
   return { games: kept, dropped: dropped.map((game) => game.title) };
