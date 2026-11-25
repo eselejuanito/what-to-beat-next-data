@@ -24,7 +24,7 @@ export const PLATFORMS = {
   arcade: [52], neogeo: [80], pce: [86], pcecd: [150],
 };
 
-async function token() {
+export async function token() {
   const { IGDB_CLIENT_ID: id, IGDB_CLIENT_SECRET: secret } = process.env;
   if (!id || !secret) return null;
   const response = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${encodeURIComponent(id)}&client_secret=${encodeURIComponent(secret)}&grant_type=client_credentials`, { method: 'POST' });
@@ -33,7 +33,7 @@ async function token() {
 }
 
 let last = 0;
-async function query(auth, endpoint, body) {
+export async function query(auth, endpoint, body) {
   for (let attempt = 1; ; attempt++) {
     const wait = last + 300 - Date.now();
     if (wait > 0) await sleep(wait);
@@ -45,7 +45,7 @@ async function query(auth, endpoint, body) {
   }
 }
 
-const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+export const quote = (text) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 const FIELDS = 'fields name,slug,cover.image_id,genres,alternative_names.name,first_release_date,total_rating,total_rating_count,platforms;';
 // A rating from a handful of votes says little (100 % from 2 people), but with nothing else it is better than no rating at all
 // (4,486 of the catalog's 9,277 IGDB games had none at 5): the vote count always goes with it, so the extension can show it as "few votes".
