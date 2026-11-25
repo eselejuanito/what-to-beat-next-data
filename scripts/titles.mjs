@@ -10,6 +10,14 @@ export const decode = (text) => (text || '').replace(/&(#x?[0-9a-f]+|[a-z]+);/gi
   return ENTITIES[name] ?? ENTITIES[name.toLowerCase()] ?? m;
 });
 
+// Titles not worth asking IGDB about: Japanese, Chinese, Korean or Cyrillic writing (661 of the 2,407 misses of 2026-11-25; IGDB
+// has them under their English or romaji names, which the emulator lists rarely carry). They would only use up the search budget.
+export const isUnsearchable = (title) => /[\u0400-\u04ff\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(title || '');
+
+// A trailing edition word that IGDB usually leaves out ("Two Worlds II GOTY" is IGDB's "Two Worlds II"). Definitive, Remastered and
+// Remake are NOT here: IGDB lists those as games of their own, with their own times.
+const EDITION = /[\s:–-]+(?:goty|game of the year(?: edition)?|complete edition|deluxe edition|gold edition|ultimate edition|special edition|enhanced edition|director'?s cut|collector'?s edition)$/i;
+
 const TAGS = /\s*[[(][^\])]*[\])]/g;
 const DISC = /\s*[-:–,]?\s*\bdisc\s*\d+(?:\s*of\s*\d+)?\b/gi;
 
@@ -35,6 +43,9 @@ export function spellings(title, alt = []) {
     const article = t.match(/^(.*?),\s*(the|a|an)$/i);
     if (article) add(names, `${article[2]} ${article[1]}`);
     add(search, article ? `${article[2]} ${article[1]}` : t);
+    // Last, so the title as written is always looked up first: the same without its edition word.
+    const base = t.replace(EDITION, '');
+    if (base !== t) { add(names, base); add(search, base); }
   }
   return { names, search, year };
 }

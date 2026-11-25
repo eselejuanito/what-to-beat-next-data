@@ -33,6 +33,19 @@ assert.ok(spellings('Fahrenheit', ['Indigo Prophecy']).search.includes('Indigo P
 
 // Nothing else is invented: a plain title has one spelling.
 assert.deepStrictEqual(spellings('Doom').names, ['Doom']);
+// Edition words IGDB leaves out are tried last; Definitive / Remastered stay (games of their own).
+s = spellings('Two Worlds II GOTY');
+assert.strictEqual(s.names[0], 'Two Worlds II GOTY');
+assert.ok(s.names.includes('Two Worlds II') && s.search.includes('Two Worlds II'));
+assert.ok(keysOf('Sniper Elite 3 - Ultimate Edition').has('sniperelite3'));
+assert.ok(keysOf('Pictionary: Ultimate Edition').has('pictionary'));
+assert.ok(!keysOf('Doom 3 Definitive Edition').has('doom3'));
+assert.ok(!keysOf('Resident Evil HD Remaster').has('residentevil'));
+assert.strictEqual(spellings('Special Edition').names.length, 1);        // a title that is only the edition word
+// Not asked of IGDB: writing it has under another name.
+import { isUnsearchable } from './titles.mjs';
+assert.ok(isUnsearchable('桜花センコクPortable') && isUnsearchable('Bleach ヒートザソウル2') && isUnsearchable('Мой Тест'));
+assert.ok(!isUnsearchable('Pokkén Tournament') && !isUnsearchable('Metal Slug 4 & 5'));
 console.log('titles.test: ok');
 
 // igdb.mjs pick(): the same game under another spelling, and the year hint.

@@ -5,13 +5,13 @@
 // What was found or not is kept in the published igdb.json and looked up again after REFRESH_DAYS,
 // so a daily build only asks for new games (and BUDGET at most of the slow one-by-one searches).
 import { matchKey } from './build.mjs';
-import { spellings, keysOf } from './titles.mjs';
+import { spellings, keysOf, isUnsearchable } from './titles.mjs';
 
 const API = 'https://api.igdb.com/v4/';
 const REFRESH_DAYS = 30;
 // Bumped when the lookup learns to find more (other spellings of a title): the games it did not find are then looked up again once,
 // instead of waiting out REFRESH_DAYS.
-const LOOKUP_VERSION = 3;
+const LOOKUP_VERSION = 4;   // 4: edition words dropped (GOTY ...); non-Latin titles no longer searched
 const BUDGET = 2500;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -105,6 +105,7 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   for (const { platform, title, alt, skip } of wanted) {
     const key = matchKey(title);
     if (skip) continue;   // looked at by hand: IGDB does not have it (sources/igdb-aliases.json)
+    if (isUnsearchable(title)) continue;
     const id = `${platform}|${key}`;
     if (!key || !PLATFORMS[platform] || todo.has(id) || games[id] || misses[id]) continue;
     const known = previous && previous.games && previous.games[id];
