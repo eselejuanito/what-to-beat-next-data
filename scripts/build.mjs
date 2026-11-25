@@ -421,9 +421,9 @@ async function main() {
   if (igdbFile) {
     // Approximate times for what IGDB has none for (sources/hltb-times.json, made offline from a local CSV that is not in this repository).
     const ids = [...new Set(wanted.map((game) => `${game.platform}|${matchKey(game.title)}`))];
-    const { filled, onlyHltb } = applyHltbTimes(igdbFile.games, hltbFile, ids);
+    const { filled, corrected, onlyHltb } = applyHltbTimes(igdbFile.games, hltbFile, ids);
     if (Object.keys(onlyHltb).length) igdbFile.hltbOnly = onlyHltb; else delete igdbFile.hltbOnly;
-    console.log(`hltb: times added to ${filled} games (${Object.keys(onlyHltb).length} of them not in IGDB)`);
+    console.log(`hltb: times added to ${filled} games (${Object.keys(onlyHltb).length} of them not in IGDB), ${corrected.length} IGDB times corrected`);
   }
   if (igdbFile) console.log(`igdb: ${dropImpossibleTimes(Object.values(igdbFile.games))} impossible times dropped`);
   if (igdbFile) await write('igdb.json', igdbFile);

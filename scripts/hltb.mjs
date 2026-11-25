@@ -4,6 +4,11 @@
 import { readFile } from 'node:fs/promises';
 
 export const FIELDS = ['main', 'extra', 'full'];
+// IGDB's times come from few players and sometimes from someone's total play time (Dragon Ball Z: Kakarot: 348 h
+// of story; HowLongToBeat, 395 reports: 30.5 h). When IGDB's time is over CORRECT_MIN_HOURS and more than
+// CORRECT_RATIO times HowLongToBeat's for the same slot, HowLongToBeat's is used. Everything else stays IGDB's.
+export const CORRECT_MIN_HOURS = 20;
+export const CORRECT_RATIO = 3;
 
 export async function loadHltbTimes(path) {
   try {
@@ -16,7 +21,7 @@ export async function loadHltbTimes(path) {
 // games: igdb.json's games ({ "<platform>|<key>": {...} }). file: sources/hltb-times.json. ids: the catalog's ids.
 // A game's fields that came from this file are listed in game.hltb: the next build takes them off first and puts
 // them again (the file may change; a kept game's fields are not IGDB's and must not be trusted as such).
-// Mutates games; returns { filled, onlyHltb }, where `onlyHltb` = { "<platform>|<key>": { main?, extra?, full? } }
+// Mutates games; returns { filled, corrected, onlyHltb }, where `onlyHltb` = { "<platform>|<key>": { main?, extra?, full? } }
 // for catalog games IGDB did not find at all (kept apart: they have no IGDB id, page or cover).
 export function applyHltbTimes(games, file, ids) {
   for (const game of Object.values(games)) {
@@ -25,7 +30,8 @@ export function applyHltbTimes(games, file, ids) {
   }
   const onlyHltb = {};
   let filled = 0;
-  if (!file || !file.games) return { filled, onlyHltb };
+  const corrected = [];
+  if (!file || !file.games) return { filled, corrected, onlyHltb };
   for (const id of ids) {
     const times = file.games[id];
     if (!times) continue;
@@ -33,11 +39,18 @@ export function applyHltbTimes(games, file, ids) {
     if (game) {
       const added = FIELDS.filter((field) => !(game[field] > 0) && times[field] > 0);
       for (const field of added) game[field] = times[field];
+      // A time IGDB has but far over HowLongToBeat's: HowLongToBeat's wins (and is marked as its).
+      const fixed = FIELDS.filter((field) => !added.includes(field) && times[field] > 0 && game[field] > CORRECT_MIN_HOURS && game[field] > CORRECT_RATIO * times[field]);
+      for (const field of fixed) {
+        corrected.push({ id, field, igdb: game[field], hltb: times[field] });
+        game[field] = times[field];
+      }
+      added.push(...fixed);
       if (added.length) { game.hltb = added; filled++; }
     } else {
       const only = Object.fromEntries(FIELDS.filter((field) => times[field] > 0).map((field) => [field, times[field]]));
       if (Object.keys(only).length) { onlyHltb[id] = only; filled++; }
     }
   }
-  return { filled, onlyHltb };
+  return { filled, corrected, onlyHltb };
 }

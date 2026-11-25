@@ -30,5 +30,17 @@ assert.deepStrictEqual(games['pc|a'], { id: 1, name: 'A', main: 8, extra: 21, hl
 // No file: nothing added, nothing left behind.
 r = applyHltbTimes(games, null, ids);
 assert.deepStrictEqual(games['pc|a'], { id: 1, name: 'A', main: 8 });
-assert.deepStrictEqual(r, { filled: 0, onlyHltb: {} });
+assert.deepStrictEqual(r, { filled: 0, corrected: [], onlyHltb: {} });
+// IGDB far over HowLongToBeat's (over 20 h and over 3x): HowLongToBeat's wins and is marked; a near one stays.
+const big = { games: { 'pc|k': { main: 30.5, extra: 42.1, full: 56.2, h: 5 }, 'pc|near': { main: 25, extra: 30, h: 6 }, 'pc|small': { main: 3, h: 7 } } };
+const bigGames = {
+  'pc|k': { id: 5, name: 'K', main: 348.3, extra: 356.7, full: 56.2 },
+  'pc|near': { id: 6, name: 'N', main: 60, extra: 40 },   // 60 > 3 x 25? no (2.4x): stays; extra 40 vs 30: stays
+  'pc|small': { id: 7, name: 'S', main: 12 },             // 12 > 3 x 3 but not over 20 h: stays
+};
+r = applyHltbTimes(bigGames, big, ['pc|k', 'pc|near', 'pc|small']);
+assert.deepStrictEqual(bigGames['pc|k'], { id: 5, name: 'K', main: 30.5, extra: 42.1, full: 56.2, hltb: ['main', 'extra'] });
+assert.deepStrictEqual(bigGames['pc|near'], { id: 6, name: 'N', main: 60, extra: 40 });
+assert.deepStrictEqual(bigGames['pc|small'], { id: 7, name: 'S', main: 12 });
+assert.deepStrictEqual(r.corrected.map((c) => `${c.id}:${c.field}`), ['pc|k:main', 'pc|k:extra']);
 console.log('hltb.test: ok');
