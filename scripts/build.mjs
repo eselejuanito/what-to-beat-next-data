@@ -18,6 +18,7 @@ import { join } from 'node:path';
 import { igdb, classics, dropImpossibleTimes } from './igdb.mjs';
 import { loadHltbTimes, applyHltbTimes } from './hltb.mjs';
 import { dropDemos } from './demos.mjs';
+import { dropIgnored } from './ignored.mjs';
 import { playable, computeNews } from './news.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
@@ -396,6 +397,16 @@ async function main() {
     demosDropped.push(...dropped);
   }
   console.log(`demos: ${demosDropped.length} left out of the emulator lists`);
+  // Written in Japanese / Chinese / Korean / Cyrillic (unless IGDB found them) and what is not a game (sources/ignore-games.json).
+  const previousIgdb = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
+  const ignoredIds = new Set((await readFile(join(ROOT, 'sources/ignore-games.json'), 'utf8').then(JSON.parse).catch(() => ({ games: [] }))).games);
+  let ignoredCount = 0;
+  for (const [platform, emulator] of Object.entries(emulators)) {
+    const { games, dropped } = dropIgnored(emulator.games, platform, { ids: ignoredIds, known: (previousIgdb && previousIgdb.games) || {} });
+    emulator.games = games;
+    ignoredCount += dropped.length;
+  }
+  console.log(`ignored: ${ignoredCount} left out of the emulator lists`);
   for (const [platform, emulator] of Object.entries(emulators)) {
     await write(`emu/${platform}.json`, { generated, platform, ...emulator });
     console.log(`emu/${platform}: ${emulator.games.length} games`);
@@ -420,7 +431,7 @@ async function main() {
     console.log(`news: ${Object.keys(newsFile.since).length} games in the last 60 days${previousPlayable ? '' : ' (no published files to compare with)'}`);
   }
   // IGDB: every game of the catalog, asking only for the new ones (the rest come from the last published file).
-  const previous = offline ? null : await get(`${BASE}igdb.json`).catch(() => null);
+  const previous = previousIgdb;
   const wanted = [
     ...portList.flatMap((port) => port.games.map((game) => ({ platform: port.platform, title: game.title }))),
     ...Object.entries(emulators).flatMap(([platform, emulator]) => emulator.games.filter((game) => game.status !== 'no').map((game) => ({ platform, title: game.title }))),

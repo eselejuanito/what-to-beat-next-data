@@ -105,14 +105,13 @@ export async function igdb(wanted, previous, { budget = BUDGET, log = console.lo
   for (const { platform, title, alt, skip } of wanted) {
     const key = matchKey(title);
     if (skip) continue;   // looked at by hand: IGDB does not have it (sources/igdb-aliases.json)
-    if (isUnsearchable(title)) continue;
     const id = `${platform}|${key}`;
     if (!key || !PLATFORMS[platform] || todo.has(id) || games[id] || misses[id]) continue;
     const known = previous && previous.games && previous.games[id];
     const missed = previous && previous.v === LOOKUP_VERSION && previous.misses && previous.misses[id];
     if (known && fresh(known.at)) games[id] = known;
     else if (missed && fresh(missed)) misses[id] = missed;
-    else todo.set(id, { platform, title, key, ...spellings(title, alt), keys: keysOf(title, alt) });
+    else if (!isUnsearchable(title)) todo.set(id, { platform, title, key, ...spellings(title, alt), keys: keysOf(title, alt) });
   }
   log(`igdb: ${Object.keys(games).length} kept, ${Object.keys(misses).length} misses kept, ${todo.size} to look up`);
 

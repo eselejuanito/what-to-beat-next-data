@@ -24,6 +24,7 @@ Status: `verified` (playable, or an official build of the port for that system),
 ## Rules
 
 - Demos, betas and trials are not listed (the full game is, or is not, a game of its own): `scripts/demos.mjs` decides by name and keeps real games whose title only contains the word ("Prototype", "Urban Trial Freestyle"), and P.T.
+- Left out of the emulator lists too (`scripts/ignored.mjs`): titles written in Japanese, Chinese, Korean or Cyrillic characters (unless IGDB found them) and what is not a game (players, browsers, magazines, console menus, mods), listed by hand in [sources/ignore-games.json](sources/ignore-games.json).
 
 - Facts and links to each project's own page only. **Never game files, ROMs, disc images, BIOS, firmware or keys**, nor links to them. Every port and emulator here needs the player's own copy of the game.
 - Sources are read politely: once a day, one request at a time, identified as `what-to-beat-next-data`.
